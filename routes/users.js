@@ -1,7 +1,10 @@
-//framework
-const express = require('express')
-const app = express()
-
+//framework	
+const express = require('express')	
+const bodyparser = require('body-parser')	
+const app = express()	
+	
+app.use(bodyparser.json());	
+	
 //database	
 var mysql = require('mysql');	
 var connection = mysql.createConnection({	
@@ -22,7 +25,7 @@ connection.connect(function(err) {
 });	
 	
 	
-	
+//get
 app.get('/book', function (req, res) {	
 	try{
 		connection.query('SELECT * From buku', function (error, results, fields) {
@@ -39,10 +42,10 @@ app.get('/book', function (req, res) {
 	}
 });
 
-app.get('/book/:Judul', function (req, res) {
+app.get('/book/:ISBN', function (req, res) {
 	try{
-		var query = 'SELECT * FROM buku WHERE Judul_Buku = ?'
-		connection.query(query, (req.params.Judul), function (error, results, fields) {
+		var query = 'SELECT * FROM buku WHERE ISBN = ?'
+		connection.query(query, (req.params.ISBN), function (error, results, fields) {
 			if (error) throw error;
 			//console.log(results);
 			res.json(results);
@@ -152,6 +155,46 @@ app.get('/peminjaman/:id', function (req, res) {
 	}
 });
 
+//Delete
+app.delete('/book/:ISBN',function(req,res){
+	try{
+		var query = 'DELETE FROM buku WHERE ISBN = ?'
+		connection.query(query, (req.params.ISBN), function (error, results, fields) {
+			if (error) throw error;
+			//console.log(results);
+			res.json({"response-code":200,"message":"Record successfully deleted"})
+			// error will be an Error if one occurred during the query
+			// results will contain the results of the query
+			// fields will contain information about the returned results fields (if any)
+		})
+	} catch(err) {
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//POST
+app.post('/peminjaman',function(req,res){
+	try{
+		var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM, IDJurnal) VALUES (?,?,?,?,?,?)'
+		var data = req.body
+		var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,data.ISBN,data.NIM,data.IDJurnal]
+		connection.query(query, instance, function (error, results, fields) {
+			if (error) throw error;
+			//console.log(results);
+			res.json({"response-code":200,"message":"Record successfully deleted"})
+			// error will be an Error if one occurred during the query
+			// results will contain the results of the query
+			// fields will contain information about the returned results fields (if any)
+		})
+	} catch(err) {
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+
+//functions
 function checkstock(stock){
     return (stock>=0);
 }
