@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2019 at 04:33 PM
+-- Generation Time: Nov 12, 2019 at 05:00 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -154,8 +154,7 @@ CREATE TABLE `peminjaman` (
   `Denda` int(11) DEFAULT NULL,
   `ISBN` varchar(13) NOT NULL,
   `NIM` int(11) UNSIGNED NOT NULL,
-  `IDJurnal` int(11) NOT NULL,
-  `Aktif` tinyint(1) NOT NULL DEFAULT '0'
+  `IDJurnal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
