@@ -12,6 +12,35 @@
     color:#FFFFFF;
 }
 
+/* Add a blue background color to the top navigation */
+.firstnav {
+    background-color: white;
+    overflow: hidden;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .firstnav a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 5px;
+  }
+  
+  /* Change the color of links on hover */
+  .firstnav a:hover {
+    background-color: lightgray;
+    color: black;
+  }
+  
+  /* Add a color to the active/current link */
+  .firstnav a.active {
+    background-color: dodgerblue;
+    color: white;
+  }
+
 /* search bar */
 .topnav input[type=text] {
     float: right;
@@ -19,7 +48,7 @@
     border: 1px solid rgb(171, 171, 171);
     margin-top: 8px;
     margin-right: 16px;
-    font-size: 17px;
+    font-size: 12px;
 }
 
 /* tampilan tabel */
