@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2019 at 05:00 PM
+-- Generation Time: Nov 13, 2019 at 06:56 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -45,6 +45,8 @@ CREATE TABLE `buku` (
 
 INSERT INTO `buku` (`ISBN`, `Judul_Buku`, `Pengarang`, `Sinopsis`, `Penerbit`, `Tahun_Terbit`, `Kategori`, `Stok_Buku`) VALUES
 ('1161092425913', 'Teruslah cintai negeri ini ', 'null', 'Not Available', 'Biro Komunikasi dan Layanan Informasi Kemenkeu RI', '2017', 'Not Available', 0),
+('1234567891011', 'asdfad', 'adfdf', 'asdfa', 'dfdf', '1999', 'dfsdf', 3),
+('1234567891012', 'asdasda', 'fdsfds', 'wkjqeqw', 'Not Available', '', 'Not Available', 0),
 ('1266144105303', 'Laporan tengah tahun Institut teknologi Bandung tahun anggaran 1983/1984', 'null', 'Not Available', 'Sekretariat Bidang Pengembangan ITB', '1984', 'Not Available', 0),
 ('1793336797544', 'Laporan pelaksanaan Kuliah Kerja Nyata (KKN) Universitas Jenderal Soedirman tahun 1982/1983', 'null', 'Not Available', 'Pusat Pengabdian pada Masyarakat Universitas Jenderal Soedirman', '1983', 'Not Available', 0),
 ('2092493127297', 'Introduction to electrodynamics', 'GRIFFITHS, David J.', 'Not Available', 'Prentice Hall of India', '1995', 'Not Available', 0),
@@ -92,8 +94,7 @@ INSERT INTO `buku` (`ISBN`, `Judul_Buku`, `Pengarang`, `Sinopsis`, `Penerbit`, `
 ('9016615462936', 'Kajian lanjutan indeks ketimpangan gender 2017', 'null', 'Not Available', 'Badan Pusat Statistik', '2017', 'Not Available', 0),
 ('913320391253', 'Laporan pelaksanaan Kuliah Kerja Nyata IKIP Ujung Pandang 1986/1987', 'null', 'Not Available', 'Pusat Pengabdian Masyarakat IKIP Ujung Pandang', '1987', 'Not Available', 0),
 ('9328335355296', 'MATEMATIKA pendahuluan', 'Koesmartono, Rawuh', 'Not Available', 'Penerbit ITB', '1983', 'Not Available', 0),
-('93936968106', 'Laporan Pelaksanaan Kuliah Kerja Nyata Universitas Mataram 1986/1987', 'null', 'Not Available', 'Badan Pelaksanan KKN Universitas Mataram', '1986', 'Not Available', 0),
-('9655164080872', 'The Lean startup', 'RIES, Eric', 'Not Available', 'Bentang', '2015', 'Not Available', 0);
+('93936968106', 'Laporan Pelaksanaan Kuliah Kerja Nyata Universitas Mataram 1986/1987', 'null', 'Not Available', 'Badan Pelaksanan KKN Universitas Mataram', '1986', 'Not Available', 0);
 
 -- --------------------------------------------------------
 
@@ -106,11 +107,18 @@ CREATE TABLE `jurnal` (
   `Judul_Jurnal` varchar(255) NOT NULL,
   `Pengarang_Jurnal` varchar(255) NOT NULL,
   `Abstraksi` varchar(255) NOT NULL,
-  `Status_e-jurnal` varchar(255) NOT NULL,
-  `Tahun_Terbit_Jurnal` date NOT NULL,
-  `Kategori_Juenal` varchar(255) NOT NULL,
+  `Status_e_jurnal` varchar(255) NOT NULL,
+  `Tahun_Terbit_Jurnal` varchar(255) NOT NULL,
+  `Kategori_Jurnal` varchar(255) NOT NULL,
   `Stok_Jurnal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jurnal`
+--
+
+INSERT INTO `jurnal` (`IDJurnal`, `Judul_Jurnal`, `Pengarang_Jurnal`, `Abstraksi`, `Status_e_jurnal`, `Tahun_Terbit_Jurnal`, `Kategori_Jurnal`, `Stok_Jurnal`) VALUES
+(1, 'Pengaruh kejepit pintu pada mental anak', 'Robert Handika', 'Ngasal', 'Hampir kelar', '2019', 'Komedi', 2);
 
 -- --------------------------------------------------------
 
