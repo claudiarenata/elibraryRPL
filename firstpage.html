@@ -6,26 +6,29 @@
 <body>
 
 <h1 style="border:2px solid DodgerBlue; background-color:DodgerBlue; padding: 30px; color:#FFFFFF">
-    <img src="logo-itb-512px.png" width="50" height="50" alt="logo itb"></img>
-    UPT Perpustakaan ITB
+    <img src="logo-itb-512px.png" width="60" height="60" alt="logo itb"></img>
+    <p style="position:fixed; top:30px; left:115px;"> UPT Perpustakaan ITB </p>
 </h1>
 <form action="/action_page.php" target="_self" method="get"> 
     <fieldset>
         <legend>Search</legend>
         Keyword:<br>
         <input type="text" name="keyword"><br>
+        <p padding: 10px ></p>
         Kategori :<br>
         <input list="bukuJurnal" name="bukuJurnal">
         <datalist id="bukuJurnal">
             <option value="Buku">
             <option value="Jurnal">
-        </datalist><br> 
+        </datalist><br>
+        <p padding: 10px ></p>
         Sort By :<br> 
         <input list="sort" name="sort">
         <datalist id="sort">
             <option value="Author">
             <option value="Penerbit">
-        </datalist><br> 
+        </datalist><br>
+        <p padding: 10px ></p> 
         <input type="submit">
     </fieldset> 
 </form>
