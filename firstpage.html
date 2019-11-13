@@ -1,38 +1,91 @@
 <!DOCTYPE html>
 <html>
+
+<link rel="stylesheet" href="firstpage.css">
+<script src="firstpage.js" ></script>
+
 <head>
-<title>E-library ITB</title>
+    <title>E-library ITB</title>
 </head>
+
 <body>
 
-<h1 style="border:2px solid DodgerBlue; background-color:DodgerBlue; padding: 30px; color:#FFFFFF">
-    <img src="logo-itb-512px.png" width="60" height="60" alt="logo itb"></img>
-    <p style="position:fixed; top:30px; left:115px;"> UPT Perpustakaan ITB </p>
-</h1>
-<form action="/action_page.php" target="_self" method="get"> 
-    <fieldset>
+    <h1 class="header">
+        <img src="logo-itb-512px.png" width="60" height="60" alt="logo itb"></img>
+        <p class="judul"> UPT Perpustakaan ITB </p>
+    </h1>
+
+    <!-- <form action="" target="_self" method="get">  -->
+    <fieldset id="corners">
         <legend>Search</legend>
-        Keyword:<br>
-        <input type="text" name="keyword"><br>
-        <p padding: 10px ></p>
-        Kategori :<br>
+        <div class="topnav">
+            <span style="display: inline-flexbox">
+                <input type="text" placeholder="Search Book/Journal..." name="keyword" style="width: 30%; float: left">
+                <button onclick="showtabel()"> submit </button>
+            </span>
+        </div><br>
+        <p padding: 10px></p>
+        Kategori
         <input list="bukuJurnal" name="bukuJurnal">
         <datalist id="bukuJurnal">
             <option value="Buku">
             <option value="Jurnal">
-        </datalist><br>
-        <p padding: 10px ></p>
-        Sort By :<br> 
+        </datalist>
+        <p padding: 10px></p>
+        Sort By
         <input list="sort" name="sort">
         <datalist id="sort">
             <option value="Author">
             <option value="Penerbit">
-        </datalist><br>
-        <p padding: 10px ></p> 
-        <input type="submit">
-    </fieldset> 
-</form>
-<p>This is a paragraph.</p>
+        </datalist>
+        <p padding: 10px></p>
+        
+    </fieldset>
+    <!-- </form> -->
+    
+    <!-- tabel hasil pencarian -->
+    <table class="tabBuku" id="tabelBuku" style="display: none">
+        <tr>
+            <th>ISBN</th>
+            <th>Judul Buku</th> 
+            <th>Pengarang</th>
+            <th>Penerbit</th>
+            <th>Tahun Terbit</th>
+            <th>Kategori</th>
+        </tr>
+        <tr>
+            <td>8120306023</td>
+            <td>Introduction to electrodynamics</td>
+            <td>GRIFFITHS, David J.</td>
+            <td>Prentice Hall of India</td>
+            <td>1995</td>
+            <td>Not Available</td>
+            <td style="border-color: white;">
+                <span style="display: inline-block">
+                    <button id="dModal" onclick="showdetail()"> Detail</button>
+                    <button id="pModal" onclick="showborrow()"> Pinjam</button>
+                </span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Detail Buku</p>
+        </div>
+    </div>
+    <!-- Peminjaman Modal -->
+    <div id="borrowModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Form pemesanan</p>
+        </div>
+    </div>
 
 </body>
+
 </html>
