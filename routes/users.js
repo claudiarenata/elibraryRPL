@@ -2,6 +2,8 @@
 const express = require('express')
 const app = express()
 
+const http = require('http')
+
 //database	
 var mysql = require('mysql');	
 var connection = mysql.createConnection({	
@@ -23,30 +25,54 @@ connection.connect(function(err) {
 	
 	
 	
-app.get('/book', function (req, res) {	
-	try{
-		connection.query('SELECT * From buku', function (error, results, fields) {
-			if (error) throw error;
-			//console.log(results);
-			res.json(results);
-			// error will be an Error if one occurred during the query
-			// results will contain the results of the query
-			// fields will contain information about the returned results fields (if any)
-		})
-	} catch(err) {
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
+// app.get('/book', function (req, res) {	
+// 	try{
+// 		connection.query('SELECT * From buku', function (error, results, fields) {
+// 			if (error) throw error;
+// 			//console.log(results);
+// 			res.json(results);
+// 			// error will be an Error if one occurred during the query
+// 			// results will contain the results of the query
+// 			// fields will contain information about the returned results fields (if any)
+// 		})
+// 	} catch(err) {
+// 		console.log(err)
+// 		res.json({"response-code":500,"message":"Internal server error"})
+// 	}
+// });
 
-app.get('/book/:Judul', function (req, res) {
+app.get('/book', function (req, res) {
 	try{
-		var query = 'SELECT * FROM buku WHERE Judul_Buku = ?'
-		connection.query(query, (req.params.Judul), function (error, results, fields) {
-			if (error) throw error;
-			//console.log(results);
-			res.json(results);
-		})
+        var judul = req.query.judul
+        var author = req.query.pengarang
+        if ((judul==null)&&(author==null)){
+            connection.query('SELECT * From buku', function (error, results, fields) {
+                if (error) throw error;
+                //console.log(results);
+                res.json(results);
+            })
+        }
+        else if ((judul!=null)&&(author==null)) {
+            var query = 'SELECT * FROM buku WHERE Judul_Buku = ?'
+		    connection.query(query, (judul), function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json(results);
+            })
+        }
+        else if ((judul==null)&&(author!=null)){
+            var query = 'SELECT * FROM buku WHERE Pengarang = ?'
+		    connection.query(query, (author), function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+                res.json(results);
+            })
+        }
+        else {
+            let ret = {
+                
+            }
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 	} catch(err) {
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
@@ -153,12 +179,12 @@ app.get('/peminjaman/:id', function (req, res) {
 });
 
 function checkstock(stock){
-    return (stock>=0);
+    return (stock>0);
 }
 
 function checkactive(nim){
     try{
-		var query = 'SELECT * From peminjaman WHERE NIM = ? and aktif = "1"'
+		var query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "1"'
 		connection.query(query,nim, function (error, results, fields) {
 			if (error) throw error;
 			//console.log(results);
@@ -171,6 +197,27 @@ function checkactive(nim){
 	} catch(err) {
 		console.log(err)
     }
+}
+
+function pinjam (tipe,nim,id) {
+    if (tipe=='book'){
+        var hasil = http.get('/book/'+id)
+        var stock = hasil[0].stock_buku
+        if (checkstock(stock)) {
+            if (checkactive(nim)){
+                //ini buat post ke data peminjaman
+            }
+        }
+    } else if (tipe=='jurnal'){
+        var hasil = http.get('/jurnal/'+id)
+        var stock = hasil[0].stock_jurnal
+        if (checkstock(stock)) {
+            if (checkactive(nim)){
+                //ini buat post ke data peminjaman
+            }
+        }
+    }
+    
 }
 
 //function check tanggal
