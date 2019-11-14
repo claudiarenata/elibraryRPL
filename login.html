@@ -2,16 +2,49 @@
 <html>
 
 <link rel="stylesheet" href="login.css">
+<script src="login.js" ></script>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-library ITB</title>
 </head>
 
 <body>
 
-    <h2>Login UPT Perpustakaan ITB</h2>
+    <div class="wrap">
+        <h2>Login UPT Perpustakaan ITB</h2>
 
-    <form action="firstpage.html" method="post">
+        <div id="pilihan">
+            <button id="mhs" onclick="showloginmhs(); disableadm();">Mahasiswa</button>
+            <button id="adm" onclick="showloginadm(); disablemhs();">Admin Perpustakaan</button>
+        </div>
+    </div>
+    
+
+    <!-- login mahasiswa -->
+    <form id="loginmhs" action="firstpage.html" method="post" style="display:none">
+        <div class="container">
+            <label for="nim"><b>NIM</b></label>
+            <input type="text" placeholder="Enter NIM" name="nim" required>
+        
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+            
+            <button type="submit">Login </button>
+            
+            <label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+        </div>
+    
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" class="cancelbtn" onclick="hideloginmhs();enableadm(); enablemhs()">Cancel</button>
+            <label class="psw">Forgot <a href="#">password?</a></label>
+        </div>
+    </form>
+
+    <!-- login admin -->
+    <form id="loginadm" action="pageadmin.html" method="post" style="display:none">
     
         <div class="container">
             <label for="uname"><b>Username</b></label>
@@ -28,7 +61,7 @@
         </div>
     
         <div class="container" style="background-color:#f1f1f1">
-            <!-- <button type="button" class="cancelbtn">Cancel</button> -->
+            <button type="button" class="cancelbtn" onclick="hideloginadm(); enableadm(); enablemhs();">Cancel</button>
             <label class="psw">Forgot <a href="#">password?</a></label>
         </div>
     </form>
