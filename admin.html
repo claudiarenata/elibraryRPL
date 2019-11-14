@@ -21,66 +21,66 @@
 </div>
 
 <div id="Search" class="tabcontent">
-        <fieldset id="corners">
-                <legend>Search</legend>
-                <div class="topnav">
-                    <span style="display: inline-flexbox">
-                        <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
-                        <button onclick="showtabel()"> submit </button>
-                    </span>
-                </div><br>
-                <p padding: 10px></p>
-                Kategori
-                <input list="bukuJurnal" name="bukuJurnal">
-                <datalist id="bukuJurnal">
-                    <option value="Buku">
-                    <option value="Jurnal">
-                </datalist>
-                <p padding: 10px></p>
-                Sort By
-                <input list="sort" name="sort">
-                <datalist id="sort">
-                    <option value="Author">
-                    <option value="Penerbit">
-                </datalist>
-                <p padding: 10px></p>
-            </fieldset>
-        <!-- </form> -->
-    
-        <!-- tabel hasil pencarian -->
-        <table class="tabBuku" id="tabelBuku" style="display: none">
-                <tr>
-                    <th>ISBN</th>
-                    <th>Judul Buku</th> 
-                    <th>Pengarang</th>
-                    <th>Penerbit</th>
-                    <th>Tahun Terbit</th>
-                    <th>Kategori</th>
-                    <th>Stok</th>
-                </tr>
-                <tr>
-                    <td>8120306023</td>
-                    <td>Introduction to electrodynamics</td>
-                    <td>GRIFFITHS, David J.</td>
-                    <td>Prentice Hall of India</td>
-                    <td>1995</td>
-                    <td>Not Available</td>
-                    <td>10</td>
-                    <td style="border-color: white;">
-                        <span style="display: inline-block">
-                            <button id="dModal" onclick="showdetail()"> Detail</button>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-            <!-- Detail Modal -->
-            <div id="detailModal" class="modal">
-            <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <p>Detail Buku</p>
-                </div>
-            </div>
+    <fieldset id="corners">
+        <legend>Search</legend>
+        <div class="topnav">
+            <span style="display: inline-flexbox">
+                <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
+                <button onclick="showtabel()"> submit </button>
+            </span>
+        </div><br>
+        <p padding: 10px></p>
+        Kategori
+        <input list="bukuJurnal" name="bukuJurnal">
+        <datalist id="bukuJurnal">
+            <option value="Buku">
+            <option value="Jurnal">
+        </datalist>
+        <p padding: 10px></p>
+        Sort By
+        <input list="sort" name="sort">
+        <datalist id="sort">
+            <option value="Author">
+            <option value="Penerbit">
+        </datalist>
+        <p padding: 10px></p>
+    </fieldset>
+<!-- </form> -->
+
+<!-- tabel hasil pencarian -->
+    <table class="tabBuku" id="tabelBuku" style="display: none">
+        <tr>
+            <th>ISBN</th>
+            <th>Judul Buku</th> 
+            <th>Pengarang</th>
+            <th>Penerbit</th>
+            <th>Tahun Terbit</th>
+            <th>Kategori</th>
+            <th>Stok</th>
+        </tr>
+        <tr>
+            <td>8120306023</td>
+            <td>Introduction to electrodynamics</td>
+            <td>GRIFFITHS, David J.</td>
+            <td>Prentice Hall of India</td>
+            <td>1995</td>
+            <td>Not Available</td>
+            <td>10</td>
+            <td style="border-color: white;">
+                <span style="display: inline-block">
+                    <button id="dModal" onclick="showdetail()"> Detail</button>
+                </span>
+            </td>
+        </tr>
+    </table>
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+    <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Detail Buku</p>
+        </div>
+    </div>
 </div>
 
 <div id="Daftar Peminjaman" class="tabcontent">

@@ -15,39 +15,38 @@
         <p class="judul"> UPT Perpustakaan ITB </p>
     </h1>
 
-    <div class="firstnav">
-        <a class="active" href="#home">Home</a>
-        <!-- <a href="#news">Login</a> -->
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
+    <div class="tab">
+        <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
+        <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
+        <button class="tablinks" onclick="openTable(event, 'About')">About</button>
     </div>
 
     <!-- <form action="" target="_self" method="get"> -->
+    <p padding: 10px></p>
+    <fieldset id="corners">
+        <legend>Search</legend>
+        <div class="topnav">
+            <span style="display: inline-flexbox">
+                <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
+                <button onclick="showtabel()" style="background-color: dodgerblue;"> submit </button>
+            </span>
+        </div><br>
         <p padding: 10px></p>
-        <fieldset id="corners">
-            <legend>Search</legend>
-            <div class="topnav">
-                <span style="display: inline-flexbox">
-                    <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
-                    <button onclick="showtabel()"> submit </button>
-                </span>
-            </div><br>
-            <p padding: 10px></p>
-            Kategori
-            <input list="bukuJurnal" name="bukuJurnal">
-            <datalist id="bukuJurnal">
-                <option value="Buku">
-                <option value="Jurnal">
-            </datalist>
-            <p padding: 10px></p>
-            Sort By
-            <input list="sort" name="sort">
-            <datalist id="sort">
-                <option value="Author">
-                <option value="Penerbit">
-            </datalist>
-            <p padding: 10px></p>
-        </fieldset>
+        Kategori
+        <input list="bukuJurnal" name="bukuJurnal">
+        <datalist id="bukuJurnal">
+            <option value="Buku">
+            <option value="Jurnal">
+        </datalist>
+        <p padding: 10px></p>
+        Sort By
+        <input list="sort" name="sort">
+        <datalist id="sort">
+            <option value="Author">
+            <option value="Penerbit">
+        </datalist>
+        <p padding: 10px></p>
+    </fieldset>
     <!-- </form> -->
     
     <!-- tabel hasil pencarian -->
