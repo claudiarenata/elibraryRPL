@@ -4,7 +4,6 @@ const express = require('express')
 const app = express()
 const bodyparser = require('body-parser')
 const http = require('http')
-const moment = require('moment')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -67,21 +66,6 @@ app.get('/book', function (req, res) {
 	}
 });
 
-//get book by id
-app.get('/book/:id', function (req, res) {	
-	try{
-		var query = 'SELECT * From book WHERE ISBN = ?'
-		connection.query(query, (req.params.id), function (error, results, fields) {
-			if (error) throw error;
-			//console.log(results);
-			res.json(results);
-		})
-	} catch(err) {
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
-
 //get jurnal
 app.get('/jurnal', function (req, res) {	
 	try{
@@ -115,21 +99,6 @@ app.get('/jurnal', function (req, res) {
                 
             }
         }   
-	} catch(err) {
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
-
-//get jurnal by id
-app.get('/jurnal/:id', function (req, res) {	
-	try{
-		var query = 'SELECT * From jurnal WHERE IDJurnal = ?'
-		connection.query(query, (req.params.id), function (error, results, fields) {
-			if (error) throw error;
-			//console.log(results);
-			res.json(results);
-		})
 	} catch(err) {
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
@@ -179,14 +148,25 @@ app.get('/peminjaman', function (req, res) {
 	}
 });
 
-//Get Peminjaman by id
-app.get('/peminjaman/:id', function (req, res) {	
+//Get Peminjaman
+app.get('/peminjaman', function (req, res) {	
 	try{
-		var query = 'SELECT * From peminjaman WHERE IDPeminjaman = ?'
-		connection.query(query, (req.params.id), function (error, results, fields) {
-			if (error) throw error;
-			//console.log(results);
-			res.json(results);
+		var IDPeminjaman = req.query.IDPeminjaman
+		var NIM = req.query.NIM
+		if ((NIM!=null)&&(IDPeminjaman==null)){
+			var query = 'SELECT * From peminjaman WHERE NIM = ?'
+			connection.query(query, NIM, function (error, results, fields) {
+				if (error) throw error;
+				//console.log(results);
+				res.json(results);
+			}
+		} else if ((NIM==null)&&(IDPeminjaman!=null)){
+			var query = 'SELECT * From peminjaman WHERE IDPeminjaman = ?'
+			connection.query(query, IDPeminjaman, function (error, results, fields) {
+				if (error) throw error;
+				//console.log(results);
+				res.json(results);
+			}
 		})
 	} catch(err) {
 		console.log(err)
@@ -228,6 +208,68 @@ app.post('/jurnal',function(req,res){
 	}
 });
 
+//POST data Peminjaman
+app.post('/peminjaman',function(req,res){
+	try{
+		var data = req.body
+		//data ISBN/IDJurnal
+		var JudulBuku = req.body.JudulBuku
+		var JudulJurnal = req.body.JudulJurnal
+		
+		//Peminjaman Buku
+		if ((JudulBuku!=null)&&(JudulJurnal==null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,(SELECT ISBN FROM buku WHERE Judul_Buku = ?),?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulBuku],data.NIM]
+			connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+			connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//PUT data peminjaman
+app.put('/peminjaman',function(req,res){
+	try{
+		var IDPeminjaman = req.query.IDPeminjaman
+		var Status_Pengembalian = req.query.Status_Pengembalian
+		var Denda = req.query.Denda
+		
+		if (Denda==null){
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian,IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+        } else {
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian, Denda, IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
 //PUT data stok buku
 app.put('/book',function(req,res){
 	try{
@@ -257,28 +299,10 @@ app.put('/book',function(req,res){
 	}
 });
 
-app.put('/peminjaman',function(req,res){
-	try{
-		var id = req.query.id
-		var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-		var data = [req.body.Status_Pengembalian, id]
-		connection.query(query, data, function (error, results, fields){
-			if (error) throw error;
-			//console.log(results);
-			res.json({"response-code":200,"message":"Record successfully updated"});
-		})
-	} catch(err){
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
-
-//pengecekan jumlah stok
 function checkstock(stock){
     return (stock>0);
 }
 
-//mengecek apakah user sedang melakukan peminjaman
 function checkactive(nim){
     try{
 		var query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "1"'
@@ -293,16 +317,13 @@ function checkactive(nim){
     }
 }
 
-//fungsi pinjam
 function pinjam (tipe,nim,id) {
     if (tipe=='book'){
         var hasil = http.get('/book/'+id)
         var stock = hasil[0].stock_buku
         if (checkstock(stock)) {
             if (checkactive(nim)){
-                //set tanggal peminjaman pakai moment
-                //set tanggal pengembalian pakai moment
-                //http.post()
+                //ini buat post ke data peminjaman
             }
         }
     } else if (tipe=='jurnal'){
@@ -310,62 +331,12 @@ function pinjam (tipe,nim,id) {
         var stock = hasil[0].stock_jurnal
         if (checkstock(stock)) {
             if (checkactive(nim)){
-                //set tanggal peminjamam pakai moment
-                //set tanggal pengembalian pakai moment
-                //http.post()
+                //ini buat post ke data peminjaman
             }
         }
     }
 }
 
-//cek tanggal dengan tipe moment
-function checktanggal(currentdate,Tanggal_Pengembalian){
-    return (currentdate).isAfter(Tanggal_Pengembalian);
-}
-
-//perbedaan tanggal dengan tipe moment
-function difftanggal(tanggalA,tanggalB){
-    return (tanggalA.diff(tanggalB,'days'))
-}
-
-function notifikasi(currentdate,Tanggal_Pengembalian,callback){
-    if (checktanggal(currentdate,Tanggal_Pengembalian)){
-        var day = difftanggal(currentdate,Tanggal_Pengembalian);
-        var telat = true;
-        var message = "";
-    }
-    else {
-        var day = difftanggal(Tanggal_Pengembalian,currentdate);
-        var telat = false;
-        var message = "";
-    }
-    let ret = {
-        'day':day,
-        'telat':telat,
-        'message':message
-    }
-    callback (ret);
-}
-
-function jangandihapus(){
-    var dateToday = new Date()
-    var dateA = moment(dateToday).format('YYYY-MM-DD')
-
-    var c = moment(dateA)
-
-    var dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
-
-    var d = moment(dateB)
-    console.log('hari ini '+ dateA)
-    console.log('sekian hari ini '+ dateB)
-    console.log('ini dia '+c)
-    console.log('ini dia d '+d)
-    console.log(d.isAfter(c))
-    console.log(d.diff(c,'days'))
-}
-
-//get nya pake like
-//function add tanggal today
-//function add tanggal pengembalian
+//function check tanggal
 
 module.exports = app;
