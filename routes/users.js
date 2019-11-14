@@ -159,15 +159,15 @@ app.get('/peminjaman', function (req, res) {
 				if (error) throw error;
 				//console.log(results);
 				res.json(results);
-			}
+			})
 		} else if ((NIM==null)&&(IDPeminjaman!=null)){
 			var query = 'SELECT * From peminjaman WHERE IDPeminjaman = ?'
 			connection.query(query, IDPeminjaman, function (error, results, fields) {
 				if (error) throw error;
 				//console.log(results);
 				res.json(results);
-			}
-		})
+			})
+		}
 	} catch(err) {
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
