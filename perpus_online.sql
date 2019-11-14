@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2019 at 06:56 PM
+-- Generation Time: Nov 14, 2019 at 05:23 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -99,6 +99,27 @@ INSERT INTO `buku` (`ISBN`, `Judul_Buku`, `Pengarang`, `Sinopsis`, `Penerbit`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `data_user`
+--
+
+CREATE TABLE `data_user` (
+  `Username` varchar(255) NOT NULL,
+  `Password` varchar(255) NOT NULL,
+  `Tipe_Akun` varchar(255) NOT NULL,
+  `NIM` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `data_user`
+--
+
+INSERT INTO `data_user` (`Username`, `Password`, `Tipe_Akun`, `NIM`) VALUES
+('Admin', 'admin', 'Pegawai', NULL),
+('TracieKris', '123456', 'Mahasiswa', 18216308);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jurnal`
 --
 
@@ -160,10 +181,17 @@ CREATE TABLE `peminjaman` (
   `Tanggal_Pengembalian` date DEFAULT NULL,
   `Status_Pengembalian` tinyint(1) NOT NULL DEFAULT '0',
   `Denda` int(11) DEFAULT NULL,
-  `ISBN` varchar(13) NOT NULL,
+  `ISBN` varchar(13) DEFAULT NULL,
   `NIM` int(11) UNSIGNED NOT NULL,
-  `IDJurnal` int(11) NOT NULL
+  `IDJurnal` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `peminjaman`
+--
+
+INSERT INTO `peminjaman` (`IDPeminjaman`, `Tanggal_Peminjaman`, `Tanggal_Pengembalian`, `Status_Pengembalian`, `Denda`, `ISBN`, `NIM`, `IDJurnal`) VALUES
+(1, '2019-01-10', '2019-01-20', 1, 500000, '1234567891012', 18216308, NULL);
 
 --
 -- Indexes for dumped tables
@@ -174,6 +202,13 @@ CREATE TABLE `peminjaman` (
 --
 ALTER TABLE `buku`
   ADD PRIMARY KEY (`ISBN`);
+
+--
+-- Indexes for table `data_user`
+--
+ALTER TABLE `data_user`
+  ADD PRIMARY KEY (`Username`),
+  ADD KEY `NIM` (`NIM`);
 
 --
 -- Indexes for table `jurnal`
@@ -199,6 +234,12 @@ ALTER TABLE `peminjaman`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `data_user`
+--
+ALTER TABLE `data_user`
+  ADD CONSTRAINT `NIM` FOREIGN KEY (`NIM`) REFERENCES `mahasiswa` (`NIM`);
 
 --
 -- Constraints for table `peminjaman`
