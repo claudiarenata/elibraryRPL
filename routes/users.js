@@ -131,4 +131,68 @@ app.get('/book/:id', function (req, res) {
 
 
 
+//POST data Peminjaman
+app.post('/peminjaman',function(req,res){
+	try{
+		var data = req.body
+		//data ISBN/IDJurnal
+		var JudulBuku = req.body.JudulBuku
+		var JudulJurnal = req.body.JudulJurnal
+		
+		//Peminjaman Buku
+		if ((JudulBuku!=null)&&(JudulJurnal==null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,(SELECT ISBN FROM buku WHERE Judul_Buku = ?),?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulBuku],data.NIM]
+			connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+			connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//PUT data peminjaman
+app.put('/peminjaman',function(req,res){
+	try{
+		var IDPeminjaman = req.query.IDPeminjaman
+		var Status_Pengembalian = req.query.Status_Pengembalian
+		var Denda = req.query.Denda
+		
+		if (Denda==null){
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian,IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+        } else {
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian, Denda, IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+
+
 module.exports = app;
