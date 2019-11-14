@@ -36,7 +36,7 @@ function showdetail() {
 // MODAL PEMINJAMAN //
 function showborrow() {
     // Get the modal
-    var modal = document.getElementById("borrowModal");
+    var modal = document.getElementById("detailModal");
 
     // Get the button that opens the modal
     var btn = document.getElementById("pModal");
