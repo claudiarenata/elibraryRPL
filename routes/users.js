@@ -4,6 +4,7 @@ const express = require('express')
 const app = express()
 const bodyparser = require('body-parser')
 const http = require('http')
+const moment = require('moment')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -66,6 +67,21 @@ app.get('/book', function (req, res) {
 	}
 });
 
+//get book by id
+app.get('/book/:id', function (req, res) {	
+	try{
+		var query = 'SELECT * From book WHERE ISBN = ?'
+		connection.query(query, (req.params.id), function (error, results, fields) {
+			if (error) throw error;
+			//console.log(results);
+			res.json(results);
+		})
+	} catch(err) {
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
 //get jurnal
 app.get('/jurnal', function (req, res) {	
 	try{
@@ -99,6 +115,21 @@ app.get('/jurnal', function (req, res) {
                 
             }
         }   
+	} catch(err) {
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//get jurnal by id
+app.get('/jurnal/:id', function (req, res) {	
+	try{
+		var query = 'SELECT * From jurnal WHERE IDJurnal = ?'
+		connection.query(query, (req.params.id), function (error, results, fields) {
+			if (error) throw error;
+			//console.log(results);
+			res.json(results);
+		})
 	} catch(err) {
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
@@ -242,10 +273,12 @@ app.put('/peminjaman',function(req,res){
 	}
 });
 
+//pengecekan jumlah stok
 function checkstock(stock){
     return (stock>0);
 }
 
+//mengecek apakah user sedang melakukan peminjaman
 function checkactive(nim){
     try{
 		var query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "1"'
@@ -260,13 +293,16 @@ function checkactive(nim){
     }
 }
 
+//fungsi pinjam
 function pinjam (tipe,nim,id) {
     if (tipe=='book'){
         var hasil = http.get('/book/'+id)
         var stock = hasil[0].stock_buku
         if (checkstock(stock)) {
             if (checkactive(nim)){
-                //ini buat post ke data peminjaman
+                //set tanggal peminjaman pakai moment
+                //set tanggal pengembalian pakai moment
+                //http.post()
             }
         }
     } else if (tipe=='jurnal'){
@@ -274,14 +310,62 @@ function pinjam (tipe,nim,id) {
         var stock = hasil[0].stock_jurnal
         if (checkstock(stock)) {
             if (checkactive(nim)){
-                //ini buat post ke data peminjaman
+                //set tanggal peminjamam pakai moment
+                //set tanggal pengembalian pakai moment
+                //http.post()
             }
         }
     }
 }
 
-//function check tanggal
-//app.post for adding new peminjaman
-//app.get for get peminjaman by nim
+//cek tanggal dengan tipe moment
+function checktanggal(currentdate,Tanggal_Pengembalian){
+    return (currentdate).isAfter(Tanggal_Pengembalian);
+}
+
+//perbedaan tanggal dengan tipe moment
+function difftanggal(tanggalA,tanggalB){
+    return (tanggalA.diff(tanggalB,'days'))
+}
+
+function notifikasi(currentdate,Tanggal_Pengembalian,callback){
+    if (checktanggal(currentdate,Tanggal_Pengembalian)){
+        var day = difftanggal(currentdate,Tanggal_Pengembalian);
+        var telat = true;
+        var message = "";
+    }
+    else {
+        var day = difftanggal(Tanggal_Pengembalian,currentdate);
+        var telat = false;
+        var message = "";
+    }
+    let ret = {
+        'day':day,
+        'telat':telat,
+        'message':message
+    }
+    callback (ret);
+}
+
+function jangandihapus(){
+    var dateToday = new Date()
+    var dateA = moment(dateToday).format('YYYY-MM-DD')
+
+    var c = moment(dateA)
+
+    var dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
+
+    var d = moment(dateB)
+    console.log('hari ini '+ dateA)
+    console.log('sekian hari ini '+ dateB)
+    console.log('ini dia '+c)
+    console.log('ini dia d '+d)
+    console.log(d.isAfter(c))
+    console.log(d.diff(c,'days'))
+}
+
+//get nya pake like
+//function add tanggal today
+//function add tanggal pengembalian
 
 module.exports = app;
