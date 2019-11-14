@@ -45,4 +45,43 @@ function openTable(evt, tabName) {
     }
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
-  }
+}
+
+
+//SUBMIT FORM BUKU
+function showformbuku() {
+    var x = document.getElementById("formbuku");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
+function hideformbuku() {
+    document.getElementById('formbuku').style.display='none';
+}
+
+function disablebuku() {
+    document.getElementById("buku").disabled = true;
+}
+function enablebuku() {
+    document.getElementById("buku").disabled = false;
+}
+
+// SUBMIT FORM JURNAL
+function showformjurnal() {
+    var x = document.getElementById("formjurnal");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
+function hideformjurnal() {
+    document.getElementById('formjurnal').style.display='none';
+}
+
+function disablejurnal() {
+    document.getElementById("jurnal").disabled = true;
+}
+function enablejurnal() {
+    document.getElementById("jurnal").disabled = false;
+}

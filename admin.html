@@ -5,6 +5,7 @@
     
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Perpustakaan ITB</title>
 </head>
 <body>
 
@@ -55,6 +56,7 @@
                     <th>Penerbit</th>
                     <th>Tahun Terbit</th>
                     <th>Kategori</th>
+                    <th>Stok</th>
                 </tr>
                 <tr>
                     <td>8120306023</td>
@@ -63,6 +65,7 @@
                     <td>Prentice Hall of India</td>
                     <td>1995</td>
                     <td>Not Available</td>
+                    <td>10</td>
                     <td style="border-color: white;">
                         <span style="display: inline-block">
                             <button id="dModal" onclick="showdetail()"> Detail</button>
@@ -70,30 +73,131 @@
                     </td>
                 </tr>
             </table>
+            <!-- Detail Modal -->
+            <div id="detailModal" class="modal">
+            <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Detail Buku</p>
+                </div>
+            </div>
 </div>
 
 <div id="Daftar Peminjaman" class="tabcontent">
-  <h3>Paris</h3>
-  <p>Paris is the capital of France.</p> 
+    <h3>Daftar Peminjaman</h3>
+    <!--Daftar Peminjaman-->
+    <style>
+            table#tabelPeminjaman tr:nth-child(even) { background-color:#f2f2f2; }
+    </style>
+    <table 
+    style="border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;" class="tabPeminjaman" id="tabelPeminjaman" style="display: none">
+        <tr>
+            <th style=" text-align: left;padding: 16px;">ID Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;">NIM</th> 
+            <th style=" text-align: left;padding: 16px;">Tanggal Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;">Tanggal Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;">Status Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;">Denda</th>
+            <th style=" text-align: left;padding: 16px;">ISBN</th>
+            <th style=" text-align: left;padding: 16px;">ID Jurnal</th>
+            <th style=" text-align: left;padding: 16px;">Aktif</th>
+        </tr>
+        <tr>
+            <td style=" text-align: left;padding: 16px;">8120306023</td>
+            <td style=" text-align: left;padding: 16px;">18217048</td>
+            <td style=" text-align: left;padding: 16px;">17 November 2019</td>
+            <td style=" text-align: left;padding: 16px;">Not Available</td>
+            <td style=" text-align: left;padding: 16px;">Belum Dikembalikan</td>
+            <td style=" text-align: left;padding: 16px;">0</td>
+            <td style=" text-align: left;padding: 16px;">8120306023</td>
+            <td style=" text-align: left;padding: 16px;">8120306023</td>
+            <td style=" text-align: left;padding: 16px;">Tidak Aktif</td>
+        </tr>
+    </table> 
 </div>
 
 <div id="Update Buku Jurnal" class="tabcontent">
-    <form action="/action_page.php">
+    <div class="wrap">
+        <div id="pilihan">
+            <button id="buku" onclick="showformbuku(); disablejurnal();">Buku</button>
+            <button id="jurnal" onclick="showformjurnal(); disablebuku();">Jurnal</button>
+        </div>
+    </div>
+    <!--Form Buku-->
+    <form id="formbuku" action="/action_page.php" style="display:none">
         <label for="ISBN">ISBN</label>
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
-        <label for="lname">Last Name</label>
-        <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+        <label for="judulBuku">Judul Buku</label>
+        <input type="text" id="judulBuku" name="Judul Buku" placeholder="Judul Buku">
+
+        <label for="Pengarang">Pengarang</label>
+        <input type="text" id="Pengarang" name="Pengarang" placeholder="Nama Pengarang">
+
+        <label for="Penerbit">Penerbit</label>
+        <input type="text" id="Penerbit" name="Penerbit" placeholder="Nama Penerbit">
+
+        <label for="tahunTerbit">Tahun Terbit</label>
+        <input type="text" id="tahunTerbit" name="Tahun Terbit" placeholder="Tahun Terbit">
+        
           
-        <label for="country">Country</label>
-        <select id="country" name="country">
-            <option value="australia">Australia</option>
-            <option value="canada">Canada</option>
-            <option value="usa">USA</option>
+        <label for="kategori">Kategori</label>
+        <select id="kategori" name="kategori">
+            <option value="Infrastruktur">Infrastruktur</option>
+            <option value="Arsitektur">Arsitektur</option>
+            <option value="Teknologi">Teknologi</option>
         </select>
+
+        <label for="sinopsis">Sinopsis</label>
+        <input type="text" id="sinopsis" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
+        
+        <label for="stok">Stok</label>
+        <input type="text" id="stok" name="Stok" placeholder="Stok">
+    
+        <input type="submit" value="Submit">
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" class="cancelbtn" onclick="hideformbuku();enablejurnal(); enablebuku()">Cancel</button>
+        </div>
+    </form>
+
+    <!--Form Jurnal-->
+    <form id="formjurnal" action="/action_page.php" style="display:none">
+        <label for="idJurnal">ID Jurnal</label>
+        <input type="text" id="idJurnal" name="idJurnal" placeholder="Masukkan ID Jurnal">
+          
+        <label for="judulJurnal">Judul Jurnal</label>
+        <input type="text" id="judulJurnal" name="Judul Jurnal" placeholder="Judul Jurnal">
+
+        <label for="pengarangJurnal">Pengarang</label>
+        <input type="text" id="pengarangJurnal" name="Pengarang Jurnal" placeholder="Nama Pengarang">
+
+        <label for="Abstraksi">Abstraksi</label>
+        <input type="text" id="Abstraksi" name="Abstraksi" placeholder="Tuliskan Abstraksi Jurnal ini">
+
+        <label for="tahunTerbitJurnal">Tahun Terbit</label>
+        <input type="text" id="tahunTerbitJurnal" name="Tahun Terbit Jurnal" placeholder="Tahun Terbit">
+        
+        <label for="statusJurnal">Status e-Journal</label>
+        <input type="text" id="statusJurnal" name="Status Jurnal" placeholder="Status e-Journal">
+          
+        <label for="kategoriJurnal">Kategori</label>
+        <select id="kategori" name="kategori">
+            <option value="Infrastruktur">Infrastruktur</option>
+            <option value="Arsitektur">Arsitektur</option>
+            <option value="Teknologi">Teknologi</option>
+        </select>
+
+        <label for="stokJurnal">Stok</label>
+        <input type="text" id="stokJurnal" name="Stok Jurnal" placeholder="Stok">
           
         <input type="submit" value="Submit">
-    </form>
+        <div class="container" style="background-color:#f1f1f1">
+                <button type="button" class="cancelbtn" onclick="hideformjurnal(); enablejurnal(); enablebuku();">Cancel</button>
+        </div>
+    </form>  
 </div>
 
 </body>
