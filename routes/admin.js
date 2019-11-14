@@ -146,16 +146,93 @@ app.put('/book',function(req,res){
 	}
 });
 
+//PUT data stok jurnal
+app.put('/jurnal',function(req,res){
+	try{
+		let judul = req.query.judul
+        let IDJurnal = req.query.IDJurnal
+		if ((judul!=null)&&(IDJurnal==null)) {
+            let query = 'UPDATE jurnal SET Stok_Jurnal=? WHERE Judul_Jurnal=?'
+            let data = [req.body.Stok_Jurnal, judul]
+		    connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+        }
+        else if ((judul==null)&&(IDJurnal!=null)){
+            let query = 'UPDATE jurnal SET Stok_Jurnal=? WHERE IDJurnal=?'
+            let data = [req.body.Stok_Jurnal, IDJurnal]
+		    connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//PUT data peminjaman
 app.put('/peminjaman',function(req,res){
 	try{
-		let id = req.query.id
-		let query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-		let data = [req.body.Status_Pengembalian, id]
-		connection.query(query, data, function (error, results, fields){
-			if (error) throw error;
-			//console.log(results);
-			res.json({"response-code":200,"message":"Record successfully updated"});
-		})
+		var IDPeminjaman = req.query.IDPeminjaman
+		var Status_Pengembalian = req.query.Status_Pengembalian
+		var Denda = req.query.Denda
+		
+		if (Denda==null){
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian,IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+        } else {
+			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
+			var data = [Status_Pengembalian, Denda, IDPeminjaman]
+			connection.query(query, data, function (error, results, fields) {
+			    if (error) throw error;
+			    //console.log(results);
+			    res.json({"response-code":200,"message":"Record successfully updated"});
+            })
+		}
+	} catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
+//POST data Peminjaman
+app.post('/peminjaman',function(req,res){
+	try{
+		var data = req.body
+		//data ISBN/IDJurnal
+		var JudulBuku = req.body.ISBN
+		var JudulJurnal = req.body.IDJurnal
+		
+		//Peminjaman Buku
+		if ((JudulBuku!=null)&&(JudulJurnal==null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?,?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,JudulBuku,data.NIM]
+            connection.query('SET FOREIGN_KEY_CHECKS=0')
+            connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
+            var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+            connection.query('SET FOREIGN_KEY_CHECKS=0')
+			connection.query(query, instance, function(error, results, fields){
+				if (error) throw error;
+				//console.log(results);
+				res.json({"response-code":200,"message":"Record successfully added"})
+			})
+		}
 	} catch(err){
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})

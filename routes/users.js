@@ -39,26 +39,21 @@ app.get('/book', function (req, res) {
             })
         }
         else if ((judul!=null)&&(author==null)) {
-            let query = 'SELECT * FROM buku WHERE Judul_Buku = ?'
-		    connection.query(query, (judul), function (error, results, fields) {
+            let query = 'SELECT * FROM buku WHERE Judul_Buku LIKE ?'
+		    connection.query(query, ('%'+judul+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
 			    res.json(results);
             })
         }
         else if ((judul==null)&&(author!=null)){
-            let query = 'SELECT * FROM buku WHERE Pengarang = ?'
-		    connection.query(query, (author), function (error, results, fields) {
+            let query = 'SELECT * FROM buku WHERE Pengarang LIKE ?'
+		    connection.query(query, ('%'+author+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
                 res.json(results);
             })
-        }
-        else {
-            let ret = {
-                
-            }
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 	} catch(err) {
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
@@ -78,16 +73,16 @@ app.get('/jurnal', function (req, res) {
             })
         }
         else if ((judul!=null)&&(author==null)) {
-            let query = 'SELECT * FROM jurnal WHERE Judul_Jurnal = ?'
-		    connection.query(query, (judul), function (error, results, fields) {
+            let query = 'SELECT * FROM jurnal WHERE Judul_Jurnal LIKE ?'
+		    connection.query(query, ('%'+judul+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
 			    res.json(results);
             })
         }
         else if ((judul==null)&&(author!=null)){
-            let query = 'SELECT * FROM jurnal WHERE Pengarang_Jurnal = ?'
-		    connection.query(query, (author), function (error, results, fields) {
+            let query = 'SELECT * FROM jurnal WHERE Pengarang_Jurnal LIKE ?'
+		    connection.query(query, ('%'+author+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
                 res.json(results);
@@ -136,21 +131,23 @@ app.post('/peminjaman',function(req,res){
 	try{
 		var data = req.body
 		//data ISBN/IDJurnal
-		var JudulBuku = req.body.JudulBuku
-		var JudulJurnal = req.body.JudulJurnal
+		var JudulBuku = req.body.ISBN
+		var JudulJurnal = req.body.IDJurnal
 		
 		//Peminjaman Buku
 		if ((JudulBuku!=null)&&(JudulJurnal==null)){
-			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,(SELECT ISBN FROM buku WHERE Judul_Buku = ?),?)'
-			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulBuku],data.NIM]
-			connection.query(query, instance, function(error, results, fields){
+			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?,?)'
+			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,JudulBuku,data.NIM]
+            connection.query('SET FOREIGN_KEY_CHECKS=0')
+            connection.query(query, instance, function(error, results, fields){
 				if (error) throw error;
 				//console.log(results);
 				res.json({"response-code":200,"message":"Record successfully added"})
 			})
 		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
 			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
-			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+            var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+            connection.query('SET FOREIGN_KEY_CHECKS=0')
 			connection.query(query, instance, function(error, results, fields){
 				if (error) throw error;
 				//console.log(results);
@@ -163,35 +160,35 @@ app.post('/peminjaman',function(req,res){
 	}
 });
 
-//PUT data peminjaman
-app.put('/peminjaman',function(req,res){
-	try{
-		var IDPeminjaman = req.query.IDPeminjaman
-		var Status_Pengembalian = req.query.Status_Pengembalian
-		var Denda = req.query.Denda
+// //PUT data peminjaman
+// app.put('/peminjaman',function(req,res){
+// 	try{
+// 		var IDPeminjaman = req.query.IDPeminjaman
+// 		var Status_Pengembalian = req.query.Status_Pengembalian
+// 		var Denda = req.query.Denda
 		
-		if (Denda==null){
-			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-			var data = [Status_Pengembalian,IDPeminjaman]
-			connection.query(query, data, function (error, results, fields) {
-			    if (error) throw error;
-			    //console.log(results);
-			    res.json({"response-code":200,"message":"Record successfully updated"});
-            })
-        } else {
-			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
-			var data = [Status_Pengembalian, Denda, IDPeminjaman]
-			connection.query(query, data, function (error, results, fields) {
-			    if (error) throw error;
-			    //console.log(results);
-			    res.json({"response-code":200,"message":"Record successfully updated"});
-            })
-		}
-	} catch(err){
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
+// 		if (Denda==null){
+// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
+// 			var data = [Status_Pengembalian,IDPeminjaman]
+// 			connection.query(query, data, function (error, results, fields) {
+// 			    if (error) throw error;
+// 			    //console.log(results);
+// 			    res.json({"response-code":200,"message":"Record successfully updated"});
+//             })
+//         } else {
+// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
+// 			var data = [Status_Pengembalian, Denda, IDPeminjaman]
+// 			connection.query(query, data, function (error, results, fields) {
+// 			    if (error) throw error;
+// 			    //console.log(results);
+// 			    res.json({"response-code":200,"message":"Record successfully updated"});
+//             })
+// 		}
+// 	} catch(err){
+// 		console.log(err)
+// 		res.json({"response-code":500,"message":"Internal server error"})
+// 	}
+// });
 
 
 

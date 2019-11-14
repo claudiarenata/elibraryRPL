@@ -54,7 +54,7 @@ function checkstock(stock){
 //mengecek apakah user sedang melakukan peminjaman
 function checkactive(nim,callback){
     try{
-		let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "1"'
+		let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "0"'
 		connection.query(query,nim, function (error, results, fields) {
 			if (error) throw error;
             //console.log(results);
@@ -73,68 +73,140 @@ function pinjam (tipe,nim,id,callback) {
             if (!error && response.statusCode == 200){
                 // console.log(body)
                 let bod = JSON.parse(body)
-                stock = bod[0].Stok_Buku
-                if (!(checkstock(stock))){ //checkstock=true
+                let stock = bod[0].Stok_Buku
+                if (checkstock(stock)){ //checkstock=true
                     checkactive(nim,function(err,ret){
                         if (err) {
                             console.log(err)
-                        } else {
-                            if (ret==false){
+                        } else { //not checkactive error
+                            if (ret==false){ //checkactive=false
                                 let dateToday = new Date()
                                 let dateA = moment(dateToday).format('YYYY-MM-DD')
                                 let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
-                                let ret = {
-                                    'idpeminjaman':123,
-                                    'tanggal_peminjaman':dateA,
-                                    'tanggal_pengembalian':dateB,
+                                let jsonobj = {
+                                    'IDPeminjaman':126,
+                                    'Tanggal_Peminjaman':dateA,
+                                    'Tanggal_Pengembalian':dateB,
                                     'NIM':nim,
-                                    'ISBN':id
+                                    'ISBN':id,
+                                    'IDJurnal':null
                                 }
-                                callback(err,ret)
+                                request({
+                                    url:"http://localhost:3000/peminjaman",
+                                    method:"POST",
+                                    json:true,
+                                    body:jsonobj
+                                }, function(error,response,body){
+                                    if (!error && response.statusCode==200){
+                                        let jsonobj = {
+                                            'Stok_Buku':stock-1
+                                        }
+                                        request({
+                                            url:"http://localhost:3000/book?ISBN="+id,
+                                            method:"PUT",
+                                            json:true,
+                                            body:jsonobj
+                                        },function(error,response,body){
+                                            let ret=response
+                                            callback(error,ret)
+                                        })
+                                    }
+                                })
                             }
-                            else {
+                            else { //checkactive == true
+                                let ret = {
+                                    "response-code":200,
+                                    "message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"
+                                }
                                 callback(error,ret)
                             }
                         }
                     })
+                } else { //checkstock=false
+                    let ret = {
+                        "response-code":200,
+                        "message":"stok habis"
+                    }
+                    callback(error,ret)
                 }
-                // if (checkstock(stock)){
-                //     return 
-                // } else {
-                //     console.log('hihihihi')
-                // }
             } else { 
                 console.log(error)
+                let ret = {
+                    message:"error request book"
+                }
+                callback(error,ret)
             }
         })
         
-        // let stock = hasil.stock_buku
-        // if (checkstock(stock)) {
-        //     if (checkactive(nim)){
-        //         //set tanggal peminjaman pakai moment
-        //         //set tanggal pengembalian pakai moment
-        //         //http.post()
-        //         //http.put() set stockbuku berkurang 1
-        //         return (hasil)
-        //         console.log('ini berhasil wak')
-        //     } else {
-        //         return (stock)
-        //     }
-    //     }
-    // } else if (tipe=='jurnal'){
-    //     let hasil = http.get('/jurnal/'+id)
-    //     let stock = hasil[0].stock_jurnal
-    //     if (checkstock(stock)) {
-    //         if (checkactive(nim)){
-    //             //set tanggal peminjamam pakai moment
-    //             //set tanggal pengembalian pakai moment
-    //             //http.post()
-    //             //http.put() set stockjurnal berkurang 1
-    //             return('ahahaha') 
-    //         } else {
-    //             return('hihihi')
-    //         }
-    //     }
+    } else if (tipe=='jurnal'){
+        let hasil = request('http://localhost:3000/jurnal/'+id,function(error,response,body){
+            if (!error && response.statusCode == 200){
+                // console.log(body)
+                let bod = JSON.parse(body)
+                let stock = bod[0].Stok_Jurnal
+                if (checkstock(stock)){ //checkstock=true
+                    checkactive(nim,function(err,ret){
+                        if (err) {
+                            console.log(err)
+                        } else { //not checkactive error
+                            if (ret==false){ //checkactive=false
+                                let dateToday = new Date()
+                                let dateA = moment(dateToday).format('YYYY-MM-DD')
+                                let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
+                                let jsonobj = {
+                                    'IDPeminjaman':126,
+                                    'Tanggal_Peminjaman':dateA,
+                                    'Tanggal_Pengembalian':dateB,
+                                    'NIM':nim,
+                                    'ISBN':null,
+                                    'IDJurnal':id
+                                }
+                                request({
+                                    url:"http://localhost:3000/peminjaman",
+                                    method:"POST",
+                                    json:true,
+                                    body:jsonobj
+                                }, function(error,response,body){
+                                    if (!error && response.statusCode==200){
+                                        let jsonobj = {
+                                            'Stok_Jurnal':stock-1
+                                        }
+                                        request({
+                                            url:"http://localhost:3000/jurnal?IDJurnal="+id,
+                                            method:"PUT",
+                                            json:true,
+                                            body:jsonobj
+                                        },function(error,response,body){
+                                            let ret=response
+                                            callback(error,ret)
+                                        })
+                                    }
+                                })
+                            }
+                            else { //checkactive == true
+                                let ret = {
+                                    "response-code":200,
+                                    "message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"
+                                }
+                                callback(error,ret)
+                            }
+                        }
+                    })
+                } else { //checkstock=false
+                    console.log(error)
+                    let ret = {
+                        message:"error request book"
+                    }
+                    callback(error,ret)
+                }
+            } else { 
+                console.log(error)
+                let ret = {
+                    message:"error request jurnal"
+                }
+                callback(error,ret)
+            }
+        })
     }
 }
 
@@ -188,7 +260,7 @@ function jangandihapus(){
 }
 
 app.get('/',function(req,res){
-    pinjam('book',18216308,1161092425913,function(error,ret){
+    pinjam('book',18217567,1161092425913,function(error,ret){
         if (error){
             console.log('haha')
         } else {
@@ -214,6 +286,3 @@ app.get('/',function(req,res){
 })
 
 module.exports = app;
-//get nya pake like
-//function add tanggal today
-//function add tanggal pengembalian
