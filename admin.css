@@ -1,0 +1,179 @@
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+/* DARI FIRST PAGE */
+
+/* header & judul UPT Perpustakaan ITB */
+.judul {
+    position: fixed;
+    top: 30px;
+    left: 115px;
+}
+
+.header {
+    border: 2px solid DodgerBlue;
+    background-color:DodgerBlue;
+    padding: 30px;
+    color:#FFFFFF;
+}
+
+/* Add a background color to the top navigation */
+  
+.firstnav {
+    background-color: white;
+    overflow: hidden;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .firstnav a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 5px;
+  }
+  
+  /* Change the color of links on hover */
+  .firstnav a:hover {
+    background-color: lightgray;
+    color: black;
+  }
+  
+  /* Add a color to the active/current link */
+  .firstnav a.active {
+    background-color: dodgerblue;
+    color: white;
+  }
+
+/* search bar */
+.topnav input[type=text] {
+    float: right;
+    padding: 6px;
+    border: 1px solid rgb(171, 171, 171);
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 12px;
+}
+
+/* tampilan tabel */
+table, th, td {
+    border: 2px solid rgb(171, 171, 171);
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+}
+
+.tabBuku {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#corners {
+    border-radius: 25px;
+    border: 2px solid rgb(171, 171, 171);
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Style the submit button */
+  input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Add a background color to the submit button on mouse-over */
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
