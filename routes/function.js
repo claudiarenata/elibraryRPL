@@ -84,7 +84,7 @@ function pinjam (tipe,nim,id,callback) {
                                 let dateA = moment(dateToday).format('YYYY-MM-DD')
                                 let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
                                 let jsonobj = {
-                                    'IDPeminjaman':126,
+                                    'IDPeminjaman':127,
                                     'Tanggal_Peminjaman':dateA,
                                     'Tanggal_Pengembalian':dateB,
                                     'NIM':nim,
@@ -154,7 +154,7 @@ function pinjam (tipe,nim,id,callback) {
                                 let dateA = moment(dateToday).format('YYYY-MM-DD')
                                 let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
                                 let jsonobj = {
-                                    'IDPeminjaman':126,
+                                    'IDPeminjaman':127,
                                     'Tanggal_Peminjaman':dateA,
                                     'Tanggal_Pengembalian':dateB,
                                     'NIM':nim,
@@ -221,46 +221,80 @@ function difftanggal(tanggalA,tanggalB){
     return (tanggalA.diff(tanggalB,'days'))
 }
 
-function notifikasi(currentdate,Tanggal_Pengembalian,callback){
-    if (checktanggal(currentdate,Tanggal_Pengembalian)){
-        let day = difftanggal(currentdate,Tanggal_Pengembalian);
-        let telat = true;
-        let message = "";
-    }
-    else {
-        let day = difftanggal(Tanggal_Pengembalian,currentdate);
-        let telat = false;
-        let message = "";
-    }
-    let ret = {
-        'day':day,
-        'telat':telat,
-        'message':message
-    }
-    callback (ret);
+function notifikasi(nim,callback){
+    checkactive(nim,function(err,ret){
+        if (err) {
+            console.log(err)
+        } else {
+            if (ret==true){
+                try{
+                    let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "0"'
+                    connection.query(query,nim, function (error, results, fields) {
+                        if (error) throw error;
+                        //console.log(results);
+                        let currentdate = moment(new Date())
+                        let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
+                        if (checktanggal(currentdate,Tanggal_Pengembalian)){
+                            let statuspinjam = 1;
+                            let day = difftanggal(currentdate,Tanggal_Pengembalian);
+                            let telat = true;
+                            let denda = 1000*day;
+                            let message = "terlambat mengembalikan";
+                            let ret = {
+                                'statuspinjam':statuspinjam,
+                                'day':day,
+                                'telat':telat,
+                                'denda':denda,
+                                'message':message
+                            }
+                            callback (error,ret);
+                        }
+                        else {
+                            let statuspinjam = 1;
+                            let day = difftanggal(Tanggal_Pengembalian,currentdate);
+                            let telat = false;
+                            let denda = 0;
+                            let message = "masih belum telat";
+                            let ret = {
+                                'statuspinjam':statuspinjam,
+                                'day':day,
+                                'telat':telat,
+                                'denda':denda,
+                                'message':message
+                            }
+                            callback (error,ret);
+                        }
+                    })
+                } catch(err) {
+                    console.log(err)
+                    res.json({"response-code":500,"message":"Internal server error"})
+                }
+            } else { //ret==false
+                let statuspinjam = 0
+                let message = 'belum meminjam'
+                let ret = {
+                    'statuspinjam':statuspinjam,
+                    'message':message
+                }
+                callback(error,ret)
+            } 
+        }
+    })
+
 }
 
-
-//testing
-function jangandihapus(){
-    let dateToday = new Date()
-    let dateA = moment(dateToday).format('YYYY-MM-DD')
-
-    let c = moment(dateA)
-
-    let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
-
-    let d = moment(dateB)
-    console.log('hari ini '+ dateA)
-    console.log('sekian hari ini '+ dateB)
-    console.log('ini dia '+c)
-    console.log('ini dia d '+d)
-    console.log(d.isAfter(c))
-    console.log(d.diff(c,'days'))
-}
 
 app.get('/',function(req,res){
-    pinjam('book',18217567,1161092425913,function(error,ret){
+    // pinjam('book',18217204,1161092425913,function(error,ret){
+    //     if (error){
+    //         console.log('haha')
+    //     } else {
+    //         res.send(ret)
+    //         console.log('ini lo result nya '+ret)
+    //     }
+    // })
+
+    notifikasi(18217204,function(error,ret){
         if (error){
             console.log('haha')
         } else {
@@ -268,7 +302,15 @@ app.get('/',function(req,res){
             console.log('ini lo result nya '+ret)
         }
     })
-
+    // let nim=18217204
+    // let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "0"'
+    //                 connection.query(query,nim, function (error, results, fields) {
+    //                     if (error) throw error;
+    //                     //console.log(results);
+    //                     let retr = results[0].Tanggal_Pengembalian
+    //                     console.log(retr)
+    //                 })
+                        
 
     // checkactive(18216308,function(err,ret){
     //     if (err) {
