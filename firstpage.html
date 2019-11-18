@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="firstpage.css">
 <script src="firstpage.js" ></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <head>
     <title>E-library ITB</title>
 </head>
@@ -15,42 +17,40 @@
         <p class="judul"> UPT Perpustakaan ITB </p>
     </h1>
 
-    <span style="display: inline-flexbox;">
-        <div class="tab">
-            <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
-            <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
-            <button class="tablinks" onclick="openTable(event, 'About')">About</button>
-            <button href="#notification" class="notification" style="background-color: dodgerblue;">Notification</button>
-        </div>
-    </span>
+    <div class="tab" style="display: inline-flexbox;">
+        <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
+        <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
+        <button class="tablinks" onclick="openTable(event, 'About')">About</button>
+        <button href="#notification" class="notification" style="background-color: dodgerblue;">Notification</button>
+    </div>
 
     <!-- <form action="" target="_self" method="get"> -->
     <p padding: 10px></p>
     <div id="Search" class="tabcontent">
-            <fieldset id="corners">
-                <legend>Search</legend>
-                <div class="topnav">
-                    <span style="display: inline-flexbox">
-                        <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
-                        <button onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
-                    </span>
-                </div><br>
-                <p padding: 10px></p>
-                Kategori
-                <input list="bukuJurnal" name="bukuJurnal">
-                <datalist id="bukuJurnal">
-                    <option value="Buku">
-                    <option value="Jurnal">
-                </datalist>
-                <p padding: 10px></p>
-                Sort By
-                <input list="sort" name="sort">
-                <datalist id="sort">
-                    <option value="Author">
-                    <option value="Penerbit">
-                </datalist>
-                <p padding: 10px></p>
-            </fieldset>
+        <fieldset id="corners">
+            <legend>Search</legend>
+            <div class="topnav">
+                <span style="display: inline-flexbox">
+                    <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
+                    <button onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
+                </span>
+            </div><br>
+            <p padding: 10px></p>
+            Kategori
+            <input list="bukuJurnal" name="bukuJurnal">
+            <datalist id="bukuJurnal">
+                <option value="Buku">
+                <option value="Jurnal">
+            </datalist>
+            <p padding: 10px></p>
+            Sort By
+            <input list="sort" name="sort">
+            <datalist id="sort">
+                <option value="Author">
+                <option value="Penerbit">
+            </datalist>
+            <p padding: 10px></p>
+        </fieldset>
         <!-- </form> -->
         
         <!-- tabel hasil pencarian -->
@@ -96,6 +96,21 @@
             </div>
         </div>
     </div>
+
+    <!-- JQUERY AJAX -->
+    <script>
+        $.ajax({
+            url: 'http://localhost:3000/'+$('#bukuJurnal').val,
+            type:'get',
+            dataType: 'json',
+            success: function(response) {
+                console.log(response)
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        })
+    </script>
 
 </body>
 
