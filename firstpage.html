@@ -36,47 +36,47 @@
                 </span>
             </div><br>
             <p padding: 10px></p>
-            Kategori
-            <input list="bukuJurnal" name="bukuJurnal">
-            <datalist id="bukuJurnal">
-                <option value="Buku">
-                <option value="Jurnal">
-            </datalist>
+            <label>Katogori</label>
+            <select id="bukuJurnal">
+                <option value="Book">Book</option>
+                <option value="Jurnal">Jurnal</option>
+            </select>
             <p padding: 10px></p>
-            Sort By
-            <input list="sort" name="sort">
-            <datalist id="sort">
-                <option value="Author">
-                <option value="Penerbit">
-            </datalist>
+            <label>Sort By</label>
+            <select id="sort">
+                <option value="Judul">Judul</option>
+                <option value="Pengarang">Pengarang</option>
+            </select>
             <p padding: 10px></p>
         </fieldset>
         <!-- </form> -->
         
         <!-- tabel hasil pencarian -->
         <table class="tabBuku" id="tabelBuku" style="display: none">
-            <tr>
-                <th>ISBN</th>
-                <th>Judul Buku</th> 
-                <th>Pengarang</th>
-                <th>Penerbit</th>
-                <th>Tahun Terbit</th>
-                <th>Kategori</th>
-            </tr>
-            <tr>
-                <td>8120306023</td>
-                <td>Introduction to electrodynamics</td>
-                <td>GRIFFITHS, David J.</td>
-                <td>Prentice Hall of India</td>
-                <td>1995</td>
-                <td>Not Available</td>
-                <td style="border-color: white;">
-                    <span style="display: inline-block">
-                        <button id="dModal" onclick="showdetail()"> Detail</button>
-                        <button id="pModal" onclick="showborrow()"> Pinjam</button>
-                    </span>
-                </td>
-            </tr>
+            <thead id="tabheadbuku">
+                <tr>
+                    <th>ISBN</th>
+                    <th>Judul"</th>
+                    <th>Pengarang"</th>
+                    <th>Penerbit</th>
+                    <th>Tahun Terbit</th>
+                    <th>Kategori</th>
+                <tr>
+                <tbody id="tabbodybuku">
+                </tbody>
+            </thead>
+            <thead id="tabheadjurnal">
+                <tr>
+                    <th>ID Jurnal</th>
+                    <th>Judul</th>
+                    <th>Pengarang</th>
+                    <th>Status E-Journal</th>
+                    <th>Tahun Terbit</th>
+                    <th>Kategori</th>
+                <tr>
+                <tbody id="tabbodyjurnal">
+                </tbody>
+            </thead>
         </table>
 
         <!-- Detail Modal -->
@@ -104,10 +104,36 @@
             type:'get',
             dataType: 'json',
             success: function(response) {
-                console.log(response)
+                var content = '';
+                if ($('#bukuJurnal').val == 'Book') {
+                    $.each(response, function(key, value){
+                    content+=
+                        "<tr>" +
+                            "<td>"+value.ISBN+"</th>\n" +
+                            "<td>"+value.Judul_Buku+"</th>\n" +
+                            "<td>"+value.Pengarang+"</th>\n" +
+                            "<td>"+value.Penerbit+"</th>\n" +
+                            "<td>"+value.Tahun_Terbit+"</th>\n" +
+                            "<td>"+value.Kategori+"</th>\n" +
+                        "</tr>";
+                    )};
+                    $("#tabbodybuku").html(content);
+                } else {
+                    $.each(response, function(key, value){
+                    content+=
+                        "<tr>" +
+                            "<td>"+value.IDJurnal+"</th>\n" +
+                            "<td>"+value.Judul_Jurnal+"</th>\n" +
+                            "<td>"+value.Pengarang_Jurnal+"</th>\n" +
+                            "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
+                            "<td>"+value.Kategori_Jurnal+"</th>\n" +
+                        "<tr>";
+                    )};
+                    $("#tabbodyjurnal").html(content);
+                };
             },
-            error: function(error) {
-                console.log(error)
+            error: function(response) {
+                console.error(response);
             }
         })
     </script>
