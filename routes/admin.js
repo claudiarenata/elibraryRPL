@@ -86,9 +86,9 @@ app.get('/peminjaman/:id', function (req, res) {
 //POST Data Buku Baru
 app.post('/book',function(req,res){
 	try{
-		let query = 'INSERT INTO buku (ISBN, Judul_Buku, Pengarang, Sinopsis, Penerbit, Tahun_Terbit, Kategoti, Stok) VALUES (?,?,?,?,?,?,?,?)'
+		let query = 'INSERT INTO buku (ISBN, Judul_Buku, Pengarang, Sinopsis, Penerbit, Tahun_Terbit, Kategori, Stok_Buku) VALUES (?,?,?,?,?,?,?,?)'
 		let data = req.body
-		let instance = [data.ISBN,data.Judul_Buku,data.Pengarang,data.Sinopsis, data.Penerbit, data.Tahun_Terbit, data.Kategori, data.Stok]
+		let instance = [data.ISBN, data.Judul_Buku,data.Pengarang,data.Sinopsis, data.Penerbit, data.Tahun_Terbit, data.Kategori, data.Stok_Buku]
 		connection.query(query, instance, function (error, results, fields) {
 			if (error) throw error;
 			//console.log(results);
