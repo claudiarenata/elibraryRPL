@@ -249,6 +249,59 @@ app.put('/peminjaman',function(req,res){
 	}
 });
 
+//notifikasi
+app.get('/notifikasi',function(req,res){
+	try{
+		var NIM = req.query.nim
+		
+		checkactive(NIM,function(err,ret){
+			if (err) {
+				console.log(err)
+				throw error;
+			} else {
+				if (ret==true){
+					try{
+						let query = "SELECT * From peminjaman WHERE NIM =? AND Status_Pengembalian =0"
+						connection.query(query,NIM, function (error, results, fields) {
+							if (error) throw error;
+							let currentdate = moment(new Date())
+							let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
+							if (checktanggal(currentdate,Tanggal_Pengembalian)){
+								let day = difftanggal(currentdate,Tanggal_Pengembalian);
+								let denda = 1000*day;
+								res.json({
+									"statuspinjam":1,
+									"day":day,
+									"telat":true,
+									"denda":denda,
+									"message":"terlambat mengembalikan"
+								})
+							} else {
+								let day = difftanggal(Tanggal_Pengembalian,currentdate);
+								res.json({
+									"statuspinjam":1,
+									"day":day,
+									"telat":false,
+									"denda":0,
+									"message":"masih belum telat"
+								})
+							}
+						})
+					} catch(err) {
+						console.log(err)
+						res.json({"response-code":500,"message":"Internal server error"})
+					}
+				} else { //ret==false
+					res.json({"statuspinjam":0,"message":"belum meminjam"})
+				} 
+			}
+		})
+	}catch(err){
+		console.log(err)
+		res.json({"response-code":500,"message":"Internal server error"})
+	}
+});
+
 //Login admin
 app.post('/login/admin',function(req,res){
 	try{
@@ -369,6 +422,16 @@ function checkactive(nim,callback){
 	} catch(err) {
 		console.log(err)
     }
+}
+
+//cek tanggal dengan tipe moment
+function checktanggal(currentdate,Tanggal_Pengembalian){
+    return (currentdate).isAfter(Tanggal_Pengembalian);
+}
+
+//perbedaan tanggal dengan tipe moment
+function difftanggal(tanggalA,tanggalB){
+    return (tanggalA.diff(tanggalB,'days'))
 }
 
 module.exports = app;
