@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="admin.css">
-    <script src="admin.js" ></script>
+    <link rel="stylesheet" href="adminpage.css">
+    <script src="adminpage.js" ></script>
     
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -127,12 +127,12 @@
         </div>
     </div>
     <!--Form Buku-->
-    <form id="formbuku" action="/action_page.php" style="display:none">
+    <form id="formbuku" method="POST" action="/book" style="display:none">
         <label for="ISBN">ISBN</label>
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
         <label for="judulBuku">Judul Buku</label>
-        <input type="text" id="judulBuku" name="Judul Buku" placeholder="Judul Buku">
+        <input type="text" name="Judul_Buku" placeholder="Judul Buku">
 
         <label for="Pengarang">Pengarang</label>
         <input type="text" id="Pengarang" name="Pengarang" placeholder="Nama Pengarang">
@@ -141,21 +141,21 @@
         <input type="text" id="Penerbit" name="Penerbit" placeholder="Nama Penerbit">
 
         <label for="tahunTerbit">Tahun Terbit</label>
-        <input type="text" id="tahunTerbit" name="Tahun Terbit" placeholder="Tahun Terbit">
+        <input type="text" name="Tahun_Terbit" placeholder="Tahun Terbit">
         
           
         <label for="kategori">Kategori</label>
-        <select id="kategori" name="kategori">
+        <select name="Kategori">
             <option value="Infrastruktur">Infrastruktur</option>
             <option value="Arsitektur">Arsitektur</option>
             <option value="Teknologi">Teknologi</option>
         </select>
 
         <label for="sinopsis">Sinopsis</label>
-        <input type="text" id="sinopsis" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
+        <input type="text" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
         
-        <label for="stok">Stok</label>
-        <input type="text" id="stok" name="Stok" placeholder="Stok">
+        <label for="Stok_Buku">Stok</label>
+        <input type="text" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
     
         <input type="submit" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
@@ -164,34 +164,34 @@
     </form>
 
     <!--Form Jurnal-->
-    <form id="formjurnal" action="/action_page.php" style="display:none">
+    <form id="formjurnal" method="POST" action="/jurnal" style="display:none" >
         <label for="idJurnal">ID Jurnal</label>
-        <input type="text" id="idJurnal" name="idJurnal" placeholder="Masukkan ID Jurnal">
+        <input type="text" id="IDJurnal" name="IDJurnal" placeholder="Masukkan ID Jurnal">
           
         <label for="judulJurnal">Judul Jurnal</label>
-        <input type="text" id="judulJurnal" name="Judul Jurnal" placeholder="Judul Jurnal">
+        <input type="text" id="Judul_Jurnal" name="Judul_Jurnal" placeholder="Judul Jurnal">
 
         <label for="pengarangJurnal">Pengarang</label>
-        <input type="text" id="pengarangJurnal" name="Pengarang Jurnal" placeholder="Nama Pengarang">
+        <input type="text" id="Pengarang_Jurnal" name="Pengarang_Jurnal" placeholder="Nama Pengarang">
 
         <label for="Abstraksi">Abstraksi</label>
         <input type="text" id="Abstraksi" name="Abstraksi" placeholder="Tuliskan Abstraksi Jurnal ini">
 
         <label for="tahunTerbitJurnal">Tahun Terbit</label>
-        <input type="text" id="tahunTerbitJurnal" name="Tahun Terbit Jurnal" placeholder="Tahun Terbit">
+        <input type="text" id="Tahun_Terbit_Jurnal" name="Tahun_Terbit_Jurnal" placeholder="Tahun Terbit">
         
         <label for="statusJurnal">Status e-Journal</label>
-        <input type="text" id="statusJurnal" name="Status Jurnal" placeholder="Status e-Journal">
+        <input type="text" id="Status_e_jurnal" name="Status_e_jurnal" placeholder="Status e-Journal">
           
         <label for="kategoriJurnal">Kategori</label>
-        <select id="kategori" name="kategori">
+        <select id="Kategori_Jurnal" name="Kategori_Jurnal">
             <option value="Infrastruktur">Infrastruktur</option>
             <option value="Arsitektur">Arsitektur</option>
             <option value="Teknologi">Teknologi</option>
         </select>
 
         <label for="stokJurnal">Stok</label>
-        <input type="text" id="stokJurnal" name="Stok Jurnal" placeholder="Stok">
+        <input type="number" id="Stok_Jurnal" name="Stok_Jurnal" placeholder="Stok">
           
         <input type="submit" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
@@ -199,6 +199,31 @@
         </div>
     </form>  
 </div>
+
+<script>
+    $(document).ready(function(){
+        jQuery.support.cors=true; 
+        $.ajax(
+        {
+            type: "GET",
+            url: 'http://localhost:3000/peminjaman', 
+            dataType: "json",
+            success : function (data) {
+                var trHTML = '';
+
+                $.each(data.Countries, function (i, item) {
+                    trHTML += '<tr><td>' + item + '</td><td>' + data.Cities[i] + '</td></tr>';
+                });
+
+                $('#location').append(trHTML);
+            }, 
+            error : function (msg){
+                alert(msg.responseText);
+            }
+        });
+    });
+
+</script>
 
 </body>
 </html> 
