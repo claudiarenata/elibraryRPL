@@ -31,7 +31,6 @@ app.use('/',router)
 app.use(bodyparser.json());	
 app.use(userRoute)
 app.use(adminRoute)
-app.use(func)
 app.use(cors({origin:'*'}))
 
 app.listen(3000)

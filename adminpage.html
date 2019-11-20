@@ -94,6 +94,7 @@
     border-spacing: 0;
     width: 100%;
     border: 1px solid #ddd;" class="tabPeminjaman" id="tabelPeminjaman" style="display: none">
+    <thead id="tabheadpeminjaman">
         <tr>
             <th style=" text-align: left;padding: 16px;">ID Peminjaman</th>
             <th style=" text-align: left;padding: 16px;">NIM</th> 
@@ -103,19 +104,9 @@
             <th style=" text-align: left;padding: 16px;">Denda</th>
             <th style=" text-align: left;padding: 16px;">ISBN</th>
             <th style=" text-align: left;padding: 16px;">ID Jurnal</th>
-            <th style=" text-align: left;padding: 16px;">Aktif</th>
         </tr>
-        <tr>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">18217048</td>
-            <td style=" text-align: left;padding: 16px;">17 November 2019</td>
-            <td style=" text-align: left;padding: 16px;">Not Available</td>
-            <td style=" text-align: left;padding: 16px;">Belum Dikembalikan</td>
-            <td style=" text-align: left;padding: 16px;">0</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">Tidak Aktif</td>
-        </tr>
+    </thead>
+    <tbody id="tabbodypeminjaman"></tbody>
     </table> 
 </div>
 
@@ -217,6 +208,7 @@ $("#formbuku").submit(function(event){
         $("#server-results").html(response);
     });
 });
+
 $("#formjurnal").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
