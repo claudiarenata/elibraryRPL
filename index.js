@@ -1,6 +1,7 @@
 // framework	
 const express = require('express')	
-const bodyparser = require('body-parser')	
+const bodyparser = require('body-parser')
+const cors = require('cors')	
 const app = express()
 const path = require('path')	
 const router=express.Router()
@@ -31,5 +32,6 @@ app.use(bodyparser.json());
 app.use(userRoute)
 app.use(adminRoute)
 app.use(func)
+app.use(cors({origin:'*'}))
 
 app.listen(3000)
