@@ -217,7 +217,7 @@ app.post('/peminjaman',function(req,res){
 									let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
 			
 									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,?)'
-									var instance = [data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,IDJurnal,NIM]
+									var instance = [dateA,dateB,IDJurnal,NIM]
 									connection.query(query, instance, function(error, results, fields){
 										if (error) throw error;
 										//console.log(results);
@@ -227,7 +227,7 @@ app.post('/peminjaman',function(req,res){
 											method: "PUT",
 											url: url,
 											body:{
-												Stok_Buku: stok
+												Stok_Jurnal: stok
 											},
 											json:true
 										},function(err,result,body){

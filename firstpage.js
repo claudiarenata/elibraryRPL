@@ -48,7 +48,7 @@ function showdetail(x) {
 }
 
 // MODAL PEMINJAMAN //
-function showborrow(a) {
+function showborrow(a,b) {
     // Get the modal
     var modal = document.getElementById("borrowModal");
 
@@ -61,6 +61,7 @@ function showborrow(a) {
     // When the user clicks the button, open the modal 
     modal.style.display = "block";
     document.getElementById('masukkan').value = a;
+    document.getElementById('tipepinjam').value = b;
     // document.getElementById('pinjamyuk').innerHTML = x;
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
