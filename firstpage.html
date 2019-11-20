@@ -93,13 +93,15 @@
                         <p>Isi data dibawah ini :</p>
                         
                         <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
-                        <p id="masukkan"></p>
+                        <input type="text" id="masukkan" disabled>
+                        <input type="hidden" id="tipepinjaman">
                         
                         <label for="NIM">ID NIM :</label>
                         <input type="text" id="NIM" name="NIM" placeholder="Masukkan NIM..." required>
 
                         <button id="submitPinjam">submit</button>
                     </form>
+                    <p id="result" style="display: none;"></p>
             </div>
         </div>
     </div>
@@ -141,7 +143,7 @@
                                     "<td>"+value.Kategori+"</th>\n" +
                                     "<td>"+value.Stok_Buku+"</th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"')\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"',1)\"> Pinjam</button>" +
                                 "</tr>";
                             });
                         } else {
@@ -155,29 +157,65 @@
                                     "<td>"+value.Kategori_Jurnal+"</th>\n" +
                                     "<td>"+value.Stok_Jurnal+"<th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"')\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"',2)\"> Pinjam</button>" +
                                 "<tr>";
                             });
                         }
                         tabmodiv.innerHTML = content;
                     },
                     error: function(response) {
-                        console.error(response);
+                        console.log(response);
                     }
                 });
             });
-            $("#submitPinjam").click(function() {
-                        var endpoint = 'http://localhost:3000/peminjaman';
-                        
-                        $.ajax({
-                            url: endpoint+'?ISBN='+encodeURIComponent(document.getElementById('ISBN')).value,
-                            type: "POST",
-                            dataType: "json",
-                            data: $('form.formpinjam').serialize(),
-                        }).done(function(response) {
-                            
-                        })
-                    })
+
+            // $("#submitPinjam").click(function() {
+            //     var elemen = document.getElementById('masukkan').innerHTML;
+            //     // var Kategori = ''
+            //     // if (elemen == ISBN) {
+            //     //     var endpoint = 'http://localhost:3000/peminjaman?ISBM='+elemen;
+            //     // } else {
+            //     //     var endpoint = 'http://localhost:3000/peminjaman?IDJurnal='+elemen;
+            //     // }
+            //     $.ajax({
+            //         url: "http://localhost:3000/peminjaman",
+            //         type: "POST",
+            //         dataType: "json",
+            //         data: {
+            //             idbukujurnal: elemen,
+            //             nim: document.getElementById('NIM'),
+            //         },
+            //         success: function(response) {
+            //             document.getElementById('result').innerHTML = response['message'];
+            //             console.log(response);
+            //         },
+            //         error: function(error) {
+            //             console.log(response);
+            //         }
+            //     });
+            // });
+        });
+
+        $("#submitPinjam").click(function(e) {
+
+            /* stop form from submitting normally */
+            e.preventDefault();
+
+            /* get the action attribute from the <form action=""> element */
+            url = 'http://localhost:3000/peminjaman';
+
+            /* Send the data using post with element id name and name2*/
+            var elemen = document.getElementById('tipepinjaman').value;
+            if (elemen == '') {
+                var posting = $.post(url, {ISBN :$(elemen), NIM :$('#NIM').val});
+            } else {
+                var posting = $.post(url, {ID_Jurnal :$(elemen), NIM :$('#NIM').val});
+            }
+
+            /* Alerts the results */
+            posting.done(function( data ) {
+                document.getElementById('result').innerHTML = data['message'];
+            });
         });
     </script>
 

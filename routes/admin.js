@@ -13,7 +13,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : '',	
+  password : 'adiera',	
   database : 'perpus_online'	
 });	
 	
@@ -229,38 +229,38 @@ app.put('/peminjaman',function(req,res){
 	}
 });
 
-//POST data Peminjaman
-app.post('/peminjaman',function(req,res){
-	try{
-		var data = req.body
-		//data ISBN/IDJurnal
-		var JudulBuku = req.body.ISBN
-		var JudulJurnal = req.body.IDJurnal
+// //POST data Peminjaman
+// app.post('/peminjaman',function(req,res){
+// 	try{
+// 		var data = req.body
+// 		//data ISBN/IDJurnal
+// 		var JudulBuku = req.body.ISBN
+// 		var JudulJurnal = req.body.IDJurnal
 		
-		//Peminjaman Buku
-		if ((JudulBuku!=null)&&(JudulJurnal==null)){
-			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?,?)'
-			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,JudulBuku,data.NIM]
-            connection.query('SET FOREIGN_KEY_CHECKS=0')
-            connection.query(query, instance, function(error, results, fields){
-				if (error) throw error;
-				//console.log(results);
-				res.json({"response-code":200,"message":"Record successfully added"})
-			})
-		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
-			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
-            var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
-            connection.query('SET FOREIGN_KEY_CHECKS=0')
-			connection.query(query, instance, function(error, results, fields){
-				if (error) throw error;
-				//console.log(results);
-				res.json({"response-code":200,"message":"Record successfully added"})
-			})
-		}
-	} catch(err){
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
+// 		//Peminjaman Buku
+// 		if ((JudulBuku!=null)&&(JudulJurnal==null)){
+// 			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?,?)'
+// 			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,JudulBuku,data.NIM]
+//             connection.query('SET FOREIGN_KEY_CHECKS=0')
+//             connection.query(query, instance, function(error, results, fields){
+// 				if (error) throw error;
+// 				//console.log(results);
+// 				res.json({"response-code":200,"message":"Record successfully added"})
+// 			})
+// 		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
+// 			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
+//             var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
+//             connection.query('SET FOREIGN_KEY_CHECKS=0')
+// 			connection.query(query, instance, function(error, results, fields){
+// 				if (error) throw error;
+// 				//console.log(results);
+// 				res.json({"response-code":200,"message":"Record successfully added"})
+// 			})
+// 		}
+// 	} catch(err){
+// 		console.log(err)
+// 		res.json({"response-code":500,"message":"Internal server error"})
+// 	}
+// });
 
 module.exports = app;

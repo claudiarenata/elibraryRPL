@@ -15,7 +15,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : '',	
+  password : 'adiera',	
   database : 'perpus_online'	
 });	
 	
@@ -143,11 +143,11 @@ app.get('/book/:id', function (req, res) {
 //POST data Peminjaman
 app.post('/peminjaman',function(req,res){
 	try{
-		var data = req.body
+		let data = req.body
 		//data
-		var ISBN = data.ISBN
-		var IDJurnal = data.IDJurnal
-		var NIM = data.NIM
+		let ISBN = data.ISBN
+		let IDJurnal = data.IDJurnal
+		let NIM = data.NIM
 		
 		//Peminjaman Buku
 		if ((ISBN!=null)&&(IDJurnal==null)){
@@ -165,13 +165,28 @@ app.post('/peminjaman',function(req,res){
 									let dateToday = new Date()
 									let dateA = moment(dateToday).format('YYYY-MM-DD')
 									let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
-								
-									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,(SELECT ISBN FROM buku WHERE ISBN = ?),?)'
-									var instance = [dateA,dateB,[ISBN],NIM]
+									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?)'
+									var instance = [dateA,dateB,ISBN,NIM]
 									connection.query(query, instance, function(error, results, fields){
 										if (error) throw error;
 										//console.log(results);
-										res.json({"response-code":200,"message":"Record successfully added"})
+										let stok = stock-1
+										let url = 'http://localhost:3000/book?ISBN='+ISBN 
+										request({
+											method: "PUT",
+											url: url,
+											body:{
+												Stok_Buku: stok
+											},
+											json:true
+										},function(err,result,body){
+											if (err) {
+												console.log(err)
+											}
+											else {
+												res.json({"response-code":200,"message":"Record successfully added"})
+											}
+										})
 									})
 								} else { //checkactive == true
 									res.json({"response-code":200,"message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"})
@@ -201,12 +216,28 @@ app.post('/peminjaman',function(req,res){
 									let dateA = moment(dateToday).format('YYYY-MM-DD')
 									let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
 			
-									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,(SELECT IDJurnal FROM jurnal WHERE IDJurnal = ?),?)'
-									var instance = [data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[IDJurnal],NIM]
+									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,?)'
+									var instance = [data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,IDJurnal,NIM]
 									connection.query(query, instance, function(error, results, fields){
 										if (error) throw error;
 										//console.log(results);
-										res.json({"response-code":200,"message":"Record successfully added"})
+										let stok = stock-1
+										let url = 'http://localhost:3000/jurnal?IDJurnal='+IDJurnal
+										request({
+											method: "PUT",
+											url: url,
+											body:{
+												Stok_Buku: stok
+											},
+											json:true
+										},function(err,result,body){
+											if (err) {
+												console.log(err)
+											}
+											else {
+												res.json({"response-code":200,"message":"Record successfully added"})
+											}
+										})
 									})
 								} else { //checkactive == true
 									res.json({"response-code":200,"message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"})
@@ -220,7 +251,7 @@ app.post('/peminjaman',function(req,res){
 					res.json({"response-code":500,"message":"Internal server error"})
 				}
 			})
-		}
+		} 
 	} catch(err){
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})

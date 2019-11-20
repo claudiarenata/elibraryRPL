@@ -6,6 +6,20 @@ function showtabel() {
     }
 }
 
+function showberhasil() {
+    var x = document.getElementById("berhasil");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
+function showgagal() {
+    var x = document.getElementById("gagal");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
 // MODAL DETAIL BUKU //
 function showdetail(x) {
     // Get the modal
@@ -46,7 +60,7 @@ function showborrow(a) {
 
     // When the user clicks the button, open the modal 
     modal.style.display = "block";
-    document.getElementById('masukkan').innerHTML = a;
+    document.getElementById('masukkan').value = a;
     // document.getElementById('pinjamyuk').innerHTML = x;
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
