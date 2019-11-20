@@ -155,7 +155,7 @@
         <input type="text" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
         
         <label for="Stok_Buku">Stok</label>
-        <input type="text" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
+        <input type="number" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
     
         <input type="submit" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
@@ -199,6 +199,41 @@
         </div>
     </form>  
 </div>
+
+<script>
+$("#formbuku").submit(function(event){
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+	var form_data = $(this).serialize(); //Creates new FormData object
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data,
+		contentType: false,
+		cache: false,
+		processData:false
+    }).done(function(response){ //
+        $("#server-results").html(response);
+    });
+});
+$("#formjurnal").submit(function(event){
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+	var form_data = $(this).serialize(); //Creates new FormData object
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data,
+		contentType: false,
+		cache: false,
+		processData:false
+    }).done(function(response){ //
+        $("#server-results").html(response);
+    });
+});
+</script>
 
 </body>
 </html> 
