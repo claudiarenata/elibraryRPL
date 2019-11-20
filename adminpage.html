@@ -94,6 +94,7 @@
     border-spacing: 0;
     width: 100%;
     border: 1px solid #ddd;" class="tabPeminjaman" id="tabelPeminjaman" style="display: none">
+    <thead id="tabheadpeminjaman">
         <tr>
             <th style=" text-align: left;padding: 16px;">ID Peminjaman</th>
             <th style=" text-align: left;padding: 16px;">NIM</th> 
@@ -103,19 +104,9 @@
             <th style=" text-align: left;padding: 16px;">Denda</th>
             <th style=" text-align: left;padding: 16px;">ISBN</th>
             <th style=" text-align: left;padding: 16px;">ID Jurnal</th>
-            <th style=" text-align: left;padding: 16px;">Aktif</th>
         </tr>
-        <tr>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">18217048</td>
-            <td style=" text-align: left;padding: 16px;">17 November 2019</td>
-            <td style=" text-align: left;padding: 16px;">Not Available</td>
-            <td style=" text-align: left;padding: 16px;">Belum Dikembalikan</td>
-            <td style=" text-align: left;padding: 16px;">0</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">Tidak Aktif</td>
-        </tr>
+    </thead>
+    <tbody id="tabbodypeminjaman"></tbody>
     </table> 
 </div>
 
@@ -127,7 +118,7 @@
         </div>
     </div>
     <!--Form Buku-->
-    <form id="formbuku" method="POST" action="/book" style="display:none">
+    <form id="formbuku" method="POST" action="http://localhost:3000/book" style="display:none">
         <label for="ISBN">ISBN</label>
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
@@ -155,7 +146,7 @@
         <input type="text" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
         
         <label for="Stok_Buku">Stok</label>
-        <input type="text" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
+        <input type="number" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
     
         <input type="submit" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
@@ -164,7 +155,7 @@
     </form>
 
     <!--Form Jurnal-->
-    <form id="formjurnal" method="POST" action="/jurnal" style="display:none" >
+    <form id="formjurnal" method="POST" action="http://localhost:3000/jurnal" style="display:none" >
         <label for="idJurnal">ID Jurnal</label>
         <input type="text" id="IDJurnal" name="IDJurnal" placeholder="Masukkan ID Jurnal">
           
@@ -201,28 +192,39 @@
 </div>
 
 <script>
-    $(document).ready(function(){
-        jQuery.support.cors=true; 
-        $.ajax(
-        {
-            type: "GET",
-            url: 'http://localhost:3000/peminjaman', 
-            dataType: "json",
-            success : function (data) {
-                var trHTML = '';
-
-                $.each(data.Countries, function (i, item) {
-                    trHTML += '<tr><td>' + item + '</td><td>' + data.Cities[i] + '</td></tr>';
-                });
-
-                $('#location').append(trHTML);
-            }, 
-            error : function (msg){
-                alert(msg.responseText);
-            }
-        });
+$("#formbuku").submit(function(event){
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+	var form_data = $(this).serialize(); //Creates new FormData object
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data,
+		contentType: false,
+		cache: false,
+		processData:false
+    }).done(function(response){ //
+        $("#server-results").html(response);
     });
+});
 
+$("#formjurnal").submit(function(event){
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+	var form_data = $(this).serialize(); //Creates new FormData object
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data,
+		contentType: false,
+		cache: false,
+		processData:false
+    }).done(function(response){ //
+        $("#server-results").html(response);
+    });
+});
 </script>
 
 </body>
