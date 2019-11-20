@@ -47,16 +47,16 @@ app.get('/book', function (req, res) {
             })
         }
         else if ((judul!=null)&&(author==null)) {
-            let query = 'SELECT * FROM buku WHERE Judul_Buku = ?'
-		    connection.query(query, (judul), function (error, results, fields) {
+            let query = 'SELECT * FROM buku WHERE Judul_Buku LIKE ?'
+		    connection.query(query, ('%'+judul+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
 			    res.json(results);
             })
         }
         else if ((judul==null)&&(author!=null)){
-            let query = 'SELECT * FROM buku WHERE Pengarang = ?'
-		    connection.query(query, (author), function (error, results, fields) {
+            let query = 'SELECT * FROM buku WHERE Pengarang LIKE ?'
+		    connection.query(query, ('%'+author+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
                 res.json(results);
@@ -86,16 +86,16 @@ app.get('/jurnal', function (req, res) {
             })
         }
         else if ((judul!=null)&&(author==null)) {
-            let query = 'SELECT * FROM jurnal WHERE Judul_Jurnal = ?'
-		    connection.query(query, (judul), function (error, results, fields) {
+            let query = 'SELECT * FROM jurnal WHERE Judul_Jurnal LIKE ?'
+		    connection.query(query, ('%'+judul+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
 			    res.json(results);
             })
         }
         else if ((judul==null)&&(author!=null)){
-            let query = 'SELECT * FROM jurnal WHERE Pengarang_Jurnal = ?'
-		    connection.query(query, (author), function (error, results, fields) {
+            let query = 'SELECT * FROM jurnal WHERE Pengarang_Jurnal LIKE ?'
+		    connection.query(query, ('%'+author+'%'), function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
                 res.json(results);
