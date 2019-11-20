@@ -127,7 +127,7 @@
         </div>
     </div>
     <!--Form Buku-->
-    <form id="formbuku" method="POST" action="/book" style="display:none">
+    <form id="formbuku" method="POST" action="http://localhost:3000/book" style="display:none">
         <label for="ISBN">ISBN</label>
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
@@ -164,7 +164,7 @@
     </form>
 
     <!--Form Jurnal-->
-    <form id="formjurnal" method="POST" action="/jurnal" style="display:none" >
+    <form id="formjurnal" method="POST" action="http://localhost:3000/jurnal" style="display:none" >
         <label for="idJurnal">ID Jurnal</label>
         <input type="text" id="IDJurnal" name="IDJurnal" placeholder="Masukkan ID Jurnal">
           
@@ -199,31 +199,6 @@
         </div>
     </form>  
 </div>
-
-<script>
-    $(document).ready(function(){
-        jQuery.support.cors=true; 
-        $.ajax(
-        {
-            type: "GET",
-            url: 'http://localhost:3000/peminjaman', 
-            dataType: "json",
-            success : function (data) {
-                var trHTML = '';
-
-                $.each(data.Countries, function (i, item) {
-                    trHTML += '<tr><td>' + item + '</td><td>' + data.Cities[i] + '</td></tr>';
-                });
-
-                $('#location').append(trHTML);
-            }, 
-            error : function (msg){
-                alert(msg.responseText);
-            }
-        });
-    });
-
-</script>
 
 </body>
 </html> 
