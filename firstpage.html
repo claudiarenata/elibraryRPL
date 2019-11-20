@@ -56,6 +56,7 @@
                     <th>Penerbit</th>
                     <th>Tahun Terbit</th>
                     <th>Kategori</th>
+                    <th>Stok</th>
                 <tr>
             </thead>
             <tbody id="tabbodybuku"></tbody>
@@ -68,6 +69,7 @@
                 <th>Pengarang</th>
                 <th>Tahun Terbit</th>
                 <th>Kategori</th>
+                <th>Stok</th>
             <tr>
         </thead>
         <tbody id="tabbodyjurnal"></tbody>
@@ -86,7 +88,18 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p id="aaabbb"><form></form></p>
+                    <form id="formpinjam" method="POST" action="#">
+                        <h1>Form Peminjaman Buku/Jurnal</h1>
+                        <p>Isi data dibawah ini :</p>
+                        
+                        <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
+                        <p id="masukkan"></p>
+                        
+                        <label for="NIM">ID NIM :</label>
+                        <input type="text" id="NIM" name="NIM" placeholder="Masukkan NIM..." required>
+
+                        <button id="submitPinjam">submit</button>
+                    </form>
             </div>
         </div>
     </div>
@@ -126,8 +139,9 @@
                                     "<td>"+value.Penerbit+"</th>\n" +
                                     "<td>"+value.Tahun_Terbit+"</th>\n" +
                                     "<td>"+value.Kategori+"</th>\n" +
+                                    "<td>"+value.Stok_Buku+"</th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow()\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"')\"> Pinjam</button>" +
                                 "</tr>";
                             });
                         } else {
@@ -139,8 +153,9 @@
                                     "<td>"+value.Pengarang_Jurnal+"</th>\n" +
                                     "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
                                     "<td>"+value.Kategori_Jurnal+"</th>\n" +
+                                    "<td>"+value.Stok_Jurnal+"<th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow()\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"')\"> Pinjam</button>" +
                                 "<tr>";
                             });
                         }
@@ -151,6 +166,18 @@
                     }
                 });
             });
+            $("#submitPinjam").click(function() {
+                        var endpoint = 'http://localhost:3000/peminjaman';
+                        
+                        $.ajax({
+                            url: endpoint+'?ISBN='+encodeURIComponent(document.getElementById('ISBN')).value,
+                            type: "POST",
+                            dataType: "json",
+                            data: $('form.formpinjam').serialize(),
+                        }).done(function(response) {
+                            
+                        })
+                    })
         });
     </script>
 

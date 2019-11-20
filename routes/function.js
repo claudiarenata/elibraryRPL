@@ -9,7 +9,6 @@ const moment = require('moment')
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
 
-<<<<<<< HEAD
 let mysql = require('mysql');	
 let connection = mysql.createConnection({	
   host     : 'localhost',	
@@ -27,8 +26,6 @@ connection.connect(function(err) {
 	
   console.log('connected as id ' + connection.threadId)	
 });	
-=======
->>>>>>> c42a863c94703e1539d1ce1162ed53d423a02cde
 
 //isEmpty
 let isEmpty = (val) => {

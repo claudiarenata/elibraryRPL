@@ -34,9 +34,9 @@ function showdetail(x) {
 }
 
 // MODAL PEMINJAMAN //
-function showborrow(x) {
+function showborrow(a) {
     // Get the modal
-    var modal = document.getElementById("detailModal");
+    var modal = document.getElementById("borrowModal");
 
     // Get the button that opens the modal
     var btn = document.getElementById("pModal");
@@ -46,7 +46,8 @@ function showborrow(x) {
 
     // When the user clicks the button, open the modal 
     modal.style.display = "block";
-    document.getElementById('iiiooo').innerHTML = x;
+    document.getElementById('masukkan').innerHTML = a;
+    // document.getElementById('pinjamyuk').innerHTML = x;
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
