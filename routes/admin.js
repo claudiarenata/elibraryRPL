@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const bodyparser = require('body-parser')
+const func = require('./function')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -178,27 +179,43 @@ app.put('/jurnal',function(req,res){
 //PUT data peminjaman
 app.put('/peminjaman',function(req,res){
 	try{
-		var IDPeminjaman = req.query.IDPeminjaman
-		var Status_Pengembalian = req.query.Status_Pengembalian
-		var Denda = req.query.Denda
+		let IDPeminjaman = req.query.IDPeminjaman
 		
-		if (Denda==null){
-			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-			var data = [Status_Pengembalian,IDPeminjaman]
-			connection.query(query, data, function (error, results, fields) {
-			    if (error) throw error;
-			    //console.log(results);
-			    res.json({"response-code":200,"message":"Record successfully updated"});
-            })
-        } else {
-			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
-			var data = [Status_Pengembalian, Denda, IDPeminjaman]
-			connection.query(query, data, function (error, results, fields) {
-			    if (error) throw error;
-			    //console.log(results);
-			    res.json({"response-code":200,"message":"Record successfully updated"});
-            })
-		}
+		let query = 'SELECT * From peminjaman WHERE IDPeminjaman=?'
+		connection.query(query,IDPeminjaman, function (error, results, fields) {
+			if (error) throw error;
+			//console.log(results);
+			let currentdate = moment(new Date())
+			let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
+			let Status_Pengembalian = results[0].Status_Pengembalian
+
+			if (Status_Pengembalian==0){
+				if (func.checktanggal(currentdate,Tanggal_Pengembalian)){
+					let day = func.difftanggal(currentdate,Tanggal_Pengembalian);
+					let Denda = 1000*day;
+					var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
+					let status_kembali = 1
+					var data = [status_kembali, Denda, IDPeminjaman]
+					connection.query(query, data, function (error, results, fields) {
+						if (error) throw error;
+						//console.log(results);
+						res.json({"response-code":200,"message":"Record successfully updated"});
+					})
+				} else {
+					var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
+					let status_kembali = 1
+					var data = [status_kembali,IDPeminjaman]
+					connection.query(query, data, function (error, results, fields) {
+			    		if (error) throw error;
+			    		//console.log(results);
+			    		res.json({"response-code":200,"message":"Record successfully updated"});
+            		})
+				} 
+			} else {
+				res.json({"response-code":200,"message":"Book/Journal already returned"})
+			}
+
+		})
 	} catch(err){
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
