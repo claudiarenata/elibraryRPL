@@ -13,7 +13,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : 'adiera',	
+  password : '',	
   database : 'perpus_online'	
 });	
 	

@@ -2,7 +2,7 @@
 <html>
     <link rel="stylesheet" href="adminpage.css">
     <script src="adminpage.js" ></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Perpustakaan ITB</title>
@@ -16,7 +16,7 @@
 
 <div class="tab">
   <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
-  <button class="tablinks" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
+  <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
   <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
 </div>
 
@@ -89,21 +89,21 @@
     <style>
             table#tabelPeminjaman tr:nth-child(even) { background-color:#f2f2f2; }
     </style>
-    <table 
+    <table  id="tabelPeminjaman" class="tabPeminjaman" method="GET" action="#"
     style="border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    border: 1px solid #ddd;" class="tabPeminjaman" id="tabelPeminjaman" style="display: none">
+    border: 1px solid #ddd;" style="display: none">
     <thead id="tabheadpeminjaman">
         <tr>
-            <th style=" text-align: left;padding: 16px;">ID Peminjaman</th>
-            <th style=" text-align: left;padding: 16px;">NIM</th> 
-            <th style=" text-align: left;padding: 16px;">Tanggal Peminjaman</th>
-            <th style=" text-align: left;padding: 16px;">Tanggal Pengembalian</th>
-            <th style=" text-align: left;padding: 16px;">Status Pengembalian</th>
-            <th style=" text-align: left;padding: 16px;">Denda</th>
-            <th style=" text-align: left;padding: 16px;">ISBN</th>
-            <th style=" text-align: left;padding: 16px;">ID Jurnal</th>
+            <th style=" text-align: left;padding: 16px;" name="IDPeminjaman">ID Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;" name="NIM">NIM</th> 
+            <th style=" text-align: left;padding: 16px;" name="Tanggal_Peminjaman">Tanggal Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;" name="Tanggal_Pengembalian">Tanggal Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;" name="Status_Pengembalian">Status Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;" name="Denda">Denda</th>
+            <th style=" text-align: left;padding: 16px;" name="ISBN">ISBN</th>
+            <th style=" text-align: left;padding: 16px;" name="IDJurnal">ID Jurnal</th>
         </tr>
     </thead>
     <tbody id="tabbodypeminjaman"></tbody>
@@ -123,7 +123,7 @@
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
         <label for="judulBuku">Judul Buku</label>
-        <input type="text" name="Judul_Buku" placeholder="Judul Buku">
+        <input type="text" id = "judul" name="Judul_Buku" placeholder="Judul Buku">
 
         <label for="Pengarang">Pengarang</label>
         <input type="text" id="Pengarang" name="Pengarang" placeholder="Nama Pengarang">
@@ -132,23 +132,23 @@
         <input type="text" id="Penerbit" name="Penerbit" placeholder="Nama Penerbit">
 
         <label for="tahunTerbit">Tahun Terbit</label>
-        <input type="text" name="Tahun_Terbit" placeholder="Tahun Terbit">
+        <input type="text" id="Tahun" name="Tahun_Terbit" placeholder="Tahun Terbit">
         
           
         <label for="kategori">Kategori</label>
-        <select name="Kategori">
+        <select id="Kategori" name="Kategori">
             <option value="Infrastruktur">Infrastruktur</option>
             <option value="Arsitektur">Arsitektur</option>
             <option value="Teknologi">Teknologi</option>
         </select>
 
         <label for="sinopsis">Sinopsis</label>
-        <input type="text" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
+        <input type="text" id="sinopsis" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
         
         <label for="Stok_Buku">Stok</label>
         <input type="number" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
     
-        <input type="submit" value="Submit">
+        <input type="submit" id="submit_btn" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
             <button type="button" class="cancelbtn" onclick="hideformbuku();enablejurnal(); enablebuku()">Cancel</button>
         </div>
@@ -184,7 +184,7 @@
         <label for="stokJurnal">Stok</label>
         <input type="number" id="Stok_Jurnal" name="Stok_Jurnal" placeholder="Stok">
           
-        <input type="submit" value="Submit">
+        <input type="submit" id="submit_btn1" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
                 <button type="button" class="cancelbtn" onclick="hideformjurnal(); enablejurnal(); enablebuku();">Cancel</button>
         </div>
@@ -192,38 +192,123 @@
 </div>
 
 <script>
-$("#formbuku").submit(function(event){
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-	var form_data = $(this).serialize(); //Creates new FormData object
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data,
-		contentType: false,
-		cache: false,
-		processData:false
-    }).done(function(response){ //
-        $("#server-results").html(response);
-    });
-});
 
-$("#formjurnal").submit(function(event){
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-	var form_data = $(this).serialize(); //Creates new FormData object
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data,
-		contentType: false,
-		cache: false,
-		processData:false
-    }).done(function(response){ //
-        $("#server-results").html(response);
+    /* attach a submit handler to the form */
+    $("#formbuku").submit(function(event) {
+
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+        var $form = $( this ),
+          url = $form.attr( 'action' );
+
+      /* Send the data using post with element id name and name2*/
+        var posting = $.post( url, { 
+            ISBN: $('#ISBN').val(), 
+            Judul_Buku: $('#judul').val(), 
+            Pengarang: $('#Pengarang').val(),
+            Penerbit: $('#Penerbit').val(), 
+            Tahun_Terbit : $('#Tahun').val(), 
+            Kategori : $('#Kategori').val(), 
+            Sinopsis : $('#sinopsis').val(), 
+            Stok_Buku :$('#Stok_Buku').val()   }
+            );
+
+        /* Alerts the results */
+        posting.done(function( data ) {
+            alert('success');
+        });
     });
+
+    $("#formjurnal").submit(function(event) {
+
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+        var $form = $( this ),
+            url = $form.attr( 'action' );
+
+        /* Send the data using post with element id name and name2*/
+        var posting = $.post( url, { 
+        IDJurnal: $('#IDJurnal').val(), 
+        Judul_Jurnal: $('#Judul_Jurnal').val(), 
+        Pengarang_Jurnal: $('#Pengarang_Jurnal').val(),
+        Abstraksi: $('#Abstraksi').val(), 
+        Tahun_Terbit_Jurnal : $('#Tahun_Terbit_Jurnal').val(), 
+        Status_e_jurnal: $('#Status_e_jurnal').val(), 
+        Kategori_Jurnal : $('#Kategori_Jurnal').val(), 
+        Stok_Jurnal :$('#Stok_Jurnal').val()   }
+        );
+
+        /* Alerts the results */
+        posting.done(function( data ) {
+        alert('success');
+        });
+    });
+
+
+
+// $("#formbuku").click(function(event){
+//     event.preventDefault(); //prevent default action 
+//     $.ajax({
+//         url : "http://localhost:3000/book",
+//         type: "POST",
+// 		dataType :'json'
+//     }).done(function(response){ //
+//         $("#server-results").html(response);
+//     });
+// });
+
+// $("#submit_btn1").click(function(event){
+//     event.preventDefault(); //prevent default action 
+//     var post_url = $(this).attr("action"); //get form action url
+//     var request_method = $(this).attr("method"); //get form GET/POST method
+// 	var form_data = $(this).serialize(); //Creates new FormData object
+//     $.ajax({
+//         url : post_url,
+//         type: request_method,
+//         data : form_data,
+// 		contentType: false,
+// 		cache: false,
+// 		processData:false
+//     }).done(function(response){ //
+//         $("#server-results").html(response);
+//     });
+// });
+
+$(document).ready(function() {
+    $("#daftarPeminjaman").click(function() {
+        var tabmodiv = document.getElementById('tabbodypeminjaman');
+        document.getElementById('tabelPeminjaman').style.display = 'block';
+        $.ajax({
+                    type: 'GET',
+                    url: "http://localhost:3000/peminjaman",
+                    dataType: 'json',                                         
+                    success: function(response) {                        
+                            content = "";
+                            $.each(response, function (key, value) {
+                                content += 
+                                    "<tr>" +  
+                                        "<td>" + value.IDPeminjaman+"</th>\n" +
+                                        "<td>" + value.NIM +"</th>\n" +
+                                        "<td>" + value.Tanggal_Peminjaman +"</th>\n" + 
+                                        "<td>" + value.Tanggal_Pengembalian +"</th>\n" + 
+                                        "<td>" + value.Status_Pengembalian+"</th>\n" + 
+                                        "<td>" + value.Denda +"</th>\n"+
+                                        "<td>" + value.ISBN+ "</th>\n" + 
+                                        "<td>" + value.IDJurnal +"</th>\n" +
+                                        "<td><button id=\"pModal\" onclick=\"showborrow()\">Ubah Status</button>" +
+                                    "</tr>";
+                            });
+                            tabmodiv.innerHTML = content;
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+            });  
+    });        
 });
 </script>
 
