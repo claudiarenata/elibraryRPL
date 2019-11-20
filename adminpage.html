@@ -45,7 +45,7 @@
         </datalist>
         <p padding: 10px></p>
     </fieldset>
-<!-- </form> -->
+
 
 <!-- tabel hasil pencarian -->
     <table class="tabBuku" id="tabelBuku" style="display: none">
@@ -191,6 +191,8 @@
     </form>  
 </div>
 
+
+
 <script>
 
     /* attach a submit handler to the form */
@@ -283,33 +285,51 @@ $(document).ready(function() {
         var tabmodiv = document.getElementById('tabbodypeminjaman');
         document.getElementById('tabelPeminjaman').style.display = 'block';
         $.ajax({
-                    type: 'GET',
-                    url: "http://localhost:3000/peminjaman",
-                    dataType: 'json',                                         
-                    success: function(response) {                        
-                            content = "";
-                            $.each(response, function (key, value) {
-                                content += 
-                                    "<tr>" +  
-                                        "<td>" + value.IDPeminjaman+"</th>\n" +
-                                        "<td>" + value.NIM +"</th>\n" +
-                                        "<td>" + value.Tanggal_Peminjaman +"</th>\n" + 
-                                        "<td>" + value.Tanggal_Pengembalian +"</th>\n" + 
-                                        "<td>" + value.Status_Pengembalian+"</th>\n" + 
-                                        "<td>" + value.Denda +"</th>\n"+
-                                        "<td>" + value.ISBN+ "</th>\n" + 
-                                        "<td>" + value.IDJurnal +"</th>\n" +
-                                        "<td><button id=\"pModal\" onclick=\"showborrow()\">Ubah Status</button>" +
-                                    "</tr>";
-                            });
-                            tabmodiv.innerHTML = content;
-                    },
-                    error: function (response) {
-                        console.log(response);
-                    }
+                type: 'GET',
+                url: "http://localhost:3000/peminjaman",
+                dataType: 'json',                                         
+                success: function(response) {                        
+                        content = "";
+                        $.each(response, function (key, value) {
+                            content += 
+                                "<tr>" +  
+                                    "<td>" + value.IDPeminjaman+"</th>\n" +
+                                    "<td>" + value.NIM +"</th>\n" +
+                                    "<td>" + value.Tanggal_Peminjaman +"</th>\n" + 
+                                    "<td>" + value.Tanggal_Pengembalian +"</th>\n" + 
+                                    "<td>" + value.Status_Pengembalian+"</th>\n" + 
+                                    "<td>" + value.Denda +"</th>\n"+
+                                    "<td>" + value.ISBN+ "</th>\n" + 
+                                    "<td>" + value.IDJurnal +"</th>\n" +
+                                    "<td><button id=\"sModal\" onclick=\"simpan('"+value.IDPeminjaman+"')\">Ubah Status</button>" +
+                                "</tr>";
+                        });
+                        tabmodiv.innerHTML = content;
+                },
+                error: function (response) {
+                    console.log(response);
+                }
             });  
     });        
 });
+
+$(document).ready(function(){
+    $("#sModal").click(function(){
+        $.ajax({
+            type : 'PUT', 
+            url :"http://localhost:3000/peminjaman?IDPeminjaman=1", 
+            dataType : 'json', 
+            contentType: 'application/json',
+            success : function(response) {
+                alert("success!");
+            }, 
+            error : function(response) {
+                console.log(response); 
+            }
+
+        });
+    });
+}); 
 </script>
 
 </body>
