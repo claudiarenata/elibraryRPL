@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const bodyparser = require('body-parser')
 const func = require('./function')
+const cors = require('cors')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -25,6 +26,12 @@ connection.connect(function(err) {
 	
   console.log('connected as id ' + connection.threadId)	
 });	
+
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
 
 //get mahasiswa
 app.get('/mahasiswa', function (req, res) {	
