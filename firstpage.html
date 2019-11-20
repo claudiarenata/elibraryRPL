@@ -20,7 +20,7 @@
     <div class="tab" style="display: inline-flexbox;">
         <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
         <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
-        <button class="tablinks" onclick="openTable(event, 'About')">About</button>
+        <!-- <button class="tablinks" onclick="openTable(event, 'About')">About</button> -->
         <button href="#notification" class="notification" style="background-color: dodgerblue;">Notification</button>
     </div>
 
@@ -31,11 +31,12 @@
             <legend>Search</legend>
             <div class="topnav">
                 <form method="GET" action="#">
-                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left"><br>
                     <p padding: 20px></p>
-                    Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
-                    <p padding: 10px></p>
-                    <select style="width: 70px;" id="bookjurnal">
+                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
+                    <p padding: 20px></p>
+                    <!-- Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
+                    <p padding: 10px></p> -->
+                    <select style="width: 100px;" id="bookjurnal">
                         <option value="book">Book</option>
                         <option value="jurnal">Jurnal</option>
                     </select><br>
@@ -110,7 +111,7 @@
                     document.getElementById('tabelBuku').style.display = 'none';
                 }
                 $.ajax({
-                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value)+'&author='+encodeURIComponent(document.getElementById('author').value),
+                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value),
                     type:'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -149,9 +150,8 @@
                         console.error(response);
                     }
                 });
-            })
-        })
-        
+            });
+        });
     </script>
 
 </body>
