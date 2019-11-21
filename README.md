@@ -75,3 +75,9 @@ Username Admin: Admin
 Password Admin: admin
 
 ```
+
+## Contributor
+* Zalikha Adiera Gambetta - 18217027
+* Christopher Calvin - 18217039
+* Muhammad Yanza Hattari - 18217043
+* Claudia Renata Maharani D. - 18217048
