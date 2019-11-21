@@ -78,16 +78,24 @@
                 data: {
                     nim :usernamemhs,
                     password :pswmhs
-                },
-                success: function(response) {
-                    $.cookie('nim', usernamemhs);
-                    window.location.href = '/userpage';
-                },
-                error: function(response) {
-                    console.log(response);
-                    alert('Maaf, harap coba lagi'); 
                 }
+            }).done(function(response){
+                $.cookie('nim', usernamemhs);
+                    indow.location.href = '/userpage';
+            }).fail(function(response){
+                console.log(response);
+                alert('Maaf, harap coba lagi');
             });
+                
+            //     success: function(response) {
+            //         $.cookie('nim', usernamemhs);
+            //         window.location.href = '/userpage';
+            //     },
+            //     error: function(response) {
+            //         console.log(response);
+            //         alert('Maaf, harap coba lagi'); 
+            //     }
+            // });
         });
         
         $('#logina').click(function(){
@@ -101,16 +109,22 @@
                 data: {
                     username :usernameadm,
                     password :pswadm
-                },
-                success: function(response) {
-                    // $.cookie('nim', usernamemhs);
-                    window.location.href = '/adminpage';
-                },
-                error: function(response) {
-                    console.log(response);
-                    alert('Maaf, harap coba lagi');
                 }
+            }).done(function(response){
+                window.location.href = '/adminpage';
+            }).fail(function(response){
+                console.log(response);
+                    alert('Maaf, harap coba lagi');
             });
+            //     success: function(response) {
+            //         // $.cookie('nim', usernamemhs);
+            //         window.location.href = '/adminpage';
+            //     },
+            //     error: function(response) {
+            //         console.log(response);
+            //         alert('Maaf, harap coba lagi');
+            //     }
+            // });
         });
 
     </script>
