@@ -202,7 +202,7 @@
             /* stop form from submitting normally */
             e.preventDefault();
 
-            endpoint = 'http://localhost:3000/notifikasi?NIM=',
+            endpoint = 'http://localhost:3000/',
 
             $.ajax({
                 url: endpoint+'?NIM='+encodeURIComponent($.cookie('nim')),

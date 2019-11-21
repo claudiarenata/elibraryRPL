@@ -45,7 +45,7 @@
     </form>
 
     <!-- login admin -->
-    <form id="loginadm" action="firstpage.html" method="" id="loginadm" style="display:none; background-color:#b1b1b1;">
+    <form id="loginadm" method="" id="loginadm" style="display:none; background-color:#b1b1b1;">
         <div class="container" >
             <label for="uname"><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
@@ -53,7 +53,7 @@
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="pswa" id="pswa" required>
             
-            <button id="logina">Login </button>
+            <button id="logina" type="button">Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -74,14 +74,6 @@
             var pswmhs = document.getElementById('pswm').value;
             
             url = 'http://localhost:3000/login/user';
-            
-            // var posting = $.post(url, {nim :usernamemhs, password :pswmhs});
-
-            /* Alerts the results */
-            // posting.done(function( data ) {
-            //     $.cookie('nim', usernamemhs);
-            //     window.location.href = 'firstpage.html';
-            // });
 
             $.ajax({
                 url: url,
@@ -93,15 +85,39 @@
                 },
                 success: function(response) {
                     $.cookie('nim', usernamemhs);
-                    // window.location.href = 'firstpage.html';
+                    window.location.href = 'firstpage.html';
                 },
                 error: function(response) {
                     console.log(response);
-                    alert('SALAH');
+                    alert('SALAH'); 
                 }
             });
         });
+        
+        $('#logina').click(function(){
+            var usernameadm = document.getElementById('uname').value;
+            var pswadm = document.getElementById('pswa').value;
+            
+            url = 'http://localhost:3000/login/admin';
 
+            $.ajax({
+                url: url,
+                type:'POST',
+                dataType: 'json',
+                data: {
+                    username :usernameadm,
+                    password :pswadm
+                },
+                success: function(response) {
+                    // $.cookie('nim', usernamemhs);
+                    window.location.href = 'adminpage.html';
+                },
+                error: function(response) {
+                    console.log(response);
+                    alert('SALAH'); 
+                }
+            });
+        });
 
     </script>
 
