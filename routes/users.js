@@ -15,7 +15,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : '',	
+  password : 'adiera',	
   database : 'perpus_online'	
 });	
 	
@@ -143,11 +143,11 @@ app.get('/book/:id', function (req, res) {
 //POST data Peminjaman
 app.post('/peminjaman',function(req,res){
 	try{
-		var data = req.body
+		let data = req.body
 		//data
-		var ISBN = data.ISBN
-		var IDJurnal = data.IDJurnal
-		var NIM = data.NIM
+		let ISBN = data.ISBN
+		let IDJurnal = data.IDJurnal
+		let NIM = data.NIM
 		
 		//Peminjaman Buku
 		if ((ISBN!=null)&&(IDJurnal==null)){
@@ -156,8 +156,8 @@ app.post('/peminjaman',function(req,res){
 					// console.log(body)
 					let bod = JSON.parse(body)
 					let stock = bod[0].Stok_Buku
-					if (checkstock(stock)){ //checkstock=true
-						checkactive(NIM,function(err,ret){
+					if (func.checkstock(stock)){ //checkstock=true
+						func.checkactive(NIM,function(err,ret){
 							if (err) {
 								console.log(err)
 							} else { //not checkactive error
@@ -165,13 +165,26 @@ app.post('/peminjaman',function(req,res){
 									let dateToday = new Date()
 									let dateA = moment(dateToday).format('YYYY-MM-DD')
 									let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
-								
-									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,(SELECT ISBN FROM buku WHERE ISBN = ?),?)'
-									var instance = [dateA,dateB,[ISBN],NIM]
+									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?)'
+									var instance = [dateA,dateB,ISBN,NIM]
 									connection.query(query, instance, function(error, results, fields){
 										if (error) throw error;
 										//console.log(results);
-										res.json({"response-code":200,"message":"Record successfully added"})
+										let stok = stock-1
+										let url = 'http://localhost:3000/book?ISBN='+ISBN 
+										request({
+											method: "PUT",
+											url: url,
+											body:{Stok_Buku: stok},
+											json:true
+										},function(err,result,body){
+											if (err) {
+												console.log(err)
+											}
+											else {
+												res.json({"response-code":200,"message":"Record successfully added"})
+											}
+										})
 									})
 								} else { //checkactive == true
 									res.json({"response-code":200,"message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"})
@@ -191,8 +204,8 @@ app.post('/peminjaman',function(req,res){
 					// console.log(body)
 					let bod = JSON.parse(body)
 					let stock = bod[0].Stok_Jurnal
-					if (checkstock(stock)){ //checkstock=true
-						checkactive(NIM,function(err,ret){
+					if (func.checkstock(stock)){ //checkstock=true
+						func.checkactive(NIM,function(err,ret){
 							if (err) {
 								console.log(err)
 							} else { //not checkactive error
@@ -201,12 +214,28 @@ app.post('/peminjaman',function(req,res){
 									let dateA = moment(dateToday).format('YYYY-MM-DD')
 									let dateB = moment(dateToday).add(7,'days').format('YYYY-MM-DD')
 			
-									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,(SELECT IDJurnal FROM jurnal WHERE IDJurnal = ?),?)'
-									var instance = [data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[IDJurnal],NIM]
+									var query = 'INSERT INTO peminjaman (Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,?)'
+									var instance = [dateA,dateB,IDJurnal,NIM]
 									connection.query(query, instance, function(error, results, fields){
 										if (error) throw error;
 										//console.log(results);
-										res.json({"response-code":200,"message":"Record successfully added"})
+										let stok = stock-1
+										let url = 'http://localhost:3000/jurnal?IDJurnal='+IDJurnal
+										request({
+											method: "PUT",
+											url: url,
+											body:{
+												Stok_Jurnal: stok
+											},
+											json:true
+										},function(err,result,body){
+											if (err) {
+												console.log(err)
+											}
+											else {
+												res.json({"response-code":200,"message":"Record successfully added"})
+											}
+										})
 									})
 								} else { //checkactive == true
 									res.json({"response-code":200,"message":"tidak boleh pinjam karena lagi pinjam buku/jurnal lain"})
@@ -220,49 +249,19 @@ app.post('/peminjaman',function(req,res){
 					res.json({"response-code":500,"message":"Internal server error"})
 				}
 			})
-		}
+		} 
 	} catch(err){
 		console.log(err)
 		res.json({"response-code":500,"message":"Internal server error"})
 	}
 });
 
-// //PUT data peminjaman
-// app.put('/peminjaman',function(req,res){
-// 	try{
-// 		var IDPeminjaman = req.query.IDPeminjaman
-// 		var Status_Pengembalian = req.query.Status_Pengembalian
-// 		var Denda = req.query.Denda
-		
-// 		if (Denda==null){
-// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-// 			var data = [Status_Pengembalian,IDPeminjaman]
-// 			connection.query(query, data, function (error, results, fields) {
-// 			    if (error) throw error;
-// 			    //console.log(results);
-// 			    res.json({"response-code":200,"message":"Record successfully updated"});
-//             })
-//         } else {
-// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
-// 			var data = [Status_Pengembalian, Denda, IDPeminjaman]
-// 			connection.query(query, data, function (error, results, fields) {
-// 			    if (error) throw error;
-// 			    //console.log(results);
-// 			    res.json({"response-code":200,"message":"Record successfully updated"});
-//             })
-// 		}
-// 	} catch(err){
-// 		console.log(err)
-// 		res.json({"response-code":500,"message":"Internal server error"})
-// 	}
-// });
-
 //notifikasi
 app.get('/notifikasi',function(req,res){
 	try{
 		var NIM = req.query.nim
 		
-		checkactive(NIM,function(err,ret){
+		func.checkactive(NIM,function(err,ret){
 			if (err) {
 				console.log(err)
 				throw error;
@@ -274,8 +273,8 @@ app.get('/notifikasi',function(req,res){
 							if (error) throw error;
 							let currentdate = moment(new Date())
 							let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
-							if (checktanggal(currentdate,Tanggal_Pengembalian)){
-								let day = difftanggal(currentdate,Tanggal_Pengembalian);
+							if (func.checktanggal(currentdate,Tanggal_Pengembalian)){
+								let day = func.difftanggal(currentdate,Tanggal_Pengembalian);
 								let denda = 1000*day;
 								res.json({
 									"statuspinjam":1,
@@ -285,7 +284,7 @@ app.get('/notifikasi',function(req,res){
 									"message":"terlambat mengembalikan"
 								})
 							} else {
-								let day = difftanggal(Tanggal_Pengembalian,currentdate);
+								let day = func.difftanggal(Tanggal_Pengembalian,currentdate);
 								res.json({
 									"statuspinjam":1,
 									"day":day,
@@ -326,7 +325,8 @@ app.post('/login/admin',function(req,res){
 			    if (error) throw error;
 			    //console.log(results);
 			    let data = results
-			    if (data == {}){
+			    if (func.isEmpty(data)){
+					res.code(401);
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
@@ -344,18 +344,19 @@ app.post('/login/user',function(req,res){
 	try{
 		var data = req.body
 		//data username dan password
-		let username = data.username
+		let username = data.nim
 		let password = data.password
 		
-		if ((data==null)||(username==null)){
+		if ((password==null)||(username==null)){
 		
 		} else{
-			var query = 'SELECT * FROM data_user WHERE Tipe_Akun="Mahasiswa" AND Username = ? AND Password=?'
+			var query = 'SELECT * FROM data_user WHERE Tipe_Akun="Mahasiswa" AND NIM = ? AND Password=?'
 			connection.query(query, [username,password], function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
-			    let data = results
-			    if (data == {}){
+				let data = results;
+			    if (func.isEmpty(data)){
+					res.code(401);
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
@@ -367,79 +368,5 @@ app.post('/login/user',function(req,res){
 		res.json({"response-code":500,"message":"Internal server error"})
 	}
 });
-
-//Login 
-//BLOM JALAN
-app.get('/login',function(req,res){
-	try{
-		var tipe = req.query.tipe
-		
-		if (tipe = 'admin'){
-			req.get({url: 'http://localhost:3000/login/admin', headers: req.headers});
-
-			processRequest(req);
-			res.setHeader('Content-Type', 'application/json');
-			res.send('Req OK');
-		} if (tipe = 'user'){
-			req.get({url: 'http://localhost:3000/login/user', headers: req.headers});
-
-			processRequest(req);
-			res.setHeader('Content-Type', 'application/json');
-			res.send('Req OK');
-		}
-	} catch(err){
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
-
-//isEmpty
-let isEmpty = (val) => {
-    let typeOfVal = typeof val;
-    switch(typeOfVal){
-        case 'object':
-            return (val.length == 0) || !Object.keys(val).length;
-            break;
-        case 'string':
-            let str = val.trim();
-            return str == '' || str == undefined;
-            break;
-        case 'number':
-            return val == '';
-            break;
-        default:
-            return val == '' || val == undefined;
-    }
-};
-
-//pengecekan jumlah stok
-function checkstock(stock){
-    return (stock>0);
-}
-
-//mengecek apakah user sedang melakukan peminjaman
-function checkactive(nim,callback){
-    try{
-		let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "0"'
-		connection.query(query,nim, function (error, results, fields) {
-			if (error) throw error;
-            //console.log(results);
-            let ret = !(isEmpty(results))
-            callback(error,ret)
-		})
-	} catch(err) {
-		console.log(err)
-    }
-}
-
-//cek tanggal dengan tipe moment
-function checktanggal(currentdate,Tanggal_Pengembalian){
-    return (currentdate).isAfter(Tanggal_Pengembalian);
-}
-
-//perbedaan tanggal dengan tipe moment
-function difftanggal(tanggalA,tanggalB){
-    return (tanggalA.diff(tanggalB,'days'))
-}
 
 module.exports = app;

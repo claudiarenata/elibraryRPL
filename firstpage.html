@@ -5,6 +5,7 @@
 <script src="firstpage.js" ></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="jquery.cookie.js"></script>
 
 <head>
     <title>E-library ITB</title>
@@ -20,8 +21,7 @@
     <div class="tab" style="display: inline-flexbox;">
         <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
         <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
-        <button class="tablinks" onclick="openTable(event, 'About')">About</button>
-        <button href="#notification" class="notification" style="background-color: dodgerblue;">Notification</button>
+        <button href="#" class="notification" id="notif" style="background-color: dodgerblue;">Notification</button>
     </div>
 
     <!-- <form action="" target="_self" method="get"> -->
@@ -31,11 +31,12 @@
             <legend>Search</legend>
             <div class="topnav">
                 <form method="GET" action="#">
-                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left"><br>
                     <p padding: 20px></p>
-                    Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
-                    <p padding: 10px></p>
-                    <select style="width: 70px;" id="bookjurnal">
+                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
+                    <p padding: 20px></p>
+                    <!-- Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
+                    <p padding: 10px></p> -->
+                    <select style="width: 100px;" id="bookjurnal">
                         <option value="book">Book</option>
                         <option value="jurnal">Jurnal</option>
                     </select><br>
@@ -55,6 +56,7 @@
                     <th>Penerbit</th>
                     <th>Tahun Terbit</th>
                     <th>Kategori</th>
+                    <th>Stok</th>
                 <tr>
             </thead>
             <tbody id="tabbodybuku"></tbody>
@@ -67,6 +69,7 @@
                 <th>Pengarang</th>
                 <th>Tahun Terbit</th>
                 <th>Kategori</th>
+                <th>Stok</th>
             <tr>
         </thead>
         <tbody id="tabbodyjurnal"></tbody>
@@ -85,11 +88,26 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p id="aaabbb"><form></form></p>
+                    <form id="formpinjam" method="POST" action="#">
+                        <h1>Form Peminjaman Buku/Jurnal</h1>
+                        <p>Isi data dibawah ini :</p>
+                        
+                        <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
+                        <input type="text" id="masukkan" disabled>
+                        <input type="hidden" id="tipepinjam">
+                        
+                        <label for="NIM">ID NIM :</label>
+                        <input type="text" id="NIM" name="NIM" placeholder="Masukkan NIM..." required>
+
+                        <button id="submitPinjam">submit</button>
+                    </form>
+                    <p id="result" style="display: none;"></p>
             </div>
         </div>
     </div>
     </div>
+
+    <a type="hidden" id="nimnotif"></a>
 
     <!-- JQUERY AJAX -->
     <script>
@@ -110,7 +128,7 @@
                     document.getElementById('tabelBuku').style.display = 'none';
                 }
                 $.ajax({
-                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value)+'&author='+encodeURIComponent(document.getElementById('author').value),
+                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value),
                     type:'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -125,8 +143,9 @@
                                     "<td>"+value.Penerbit+"</th>\n" +
                                     "<td>"+value.Tahun_Terbit+"</th>\n" +
                                     "<td>"+value.Kategori+"</th>\n" +
+                                    "<td>"+value.Stok_Buku+"</th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow()\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"','1')\"> Pinjam</button>" +
                                 "</tr>";
                             });
                         } else {
@@ -138,20 +157,66 @@
                                     "<td>"+value.Pengarang_Jurnal+"</th>\n" +
                                     "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
                                     "<td>"+value.Kategori_Jurnal+"</th>\n" +
+                                    "<td>"+value.Stok_Jurnal+"<th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow()\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"','2')\"> Pinjam</button>" +
                                 "<tr>";
                             });
                         }
                         tabmodiv.innerHTML = content;
                     },
                     error: function(response) {
-                        console.error(response);
+                        console.log(response);
                     }
                 });
-            })
-        })
-        
+            });
+        });
+
+        $("#submitPinjam").click(function(e) {
+
+            /* stop form from submitting normally */
+            e.preventDefault();
+
+            /* get the action attribute from the <form action=""> element */
+            url = 'http://localhost:3000/peminjaman';
+
+            /* Send the data using post with element id name and name2*/
+            var elemen = document.getElementById('tipepinjam').value;
+            var inputan = document.getElementById('masukkan').value;
+            var nimorang = document.getElementById('NIM').value;
+            if (parseInt(elemen) == 1) {
+                var posting = $.post(url, {ISBN :inputan, NIM :nimorang});
+            } else {
+                var posting = $.post(url, {IDJurnal :inputan, NIM :nimorang});
+            }
+
+            /* Alerts the results */
+            posting.done(function( data ) {
+                document.getElementById('result').innerHTML = data['message'];
+                document.getElementById('result').style.display = 'block';
+            });
+        });
+
+        $("#notif").click(function(e) {
+
+            /* stop form from submitting normally */
+            e.preventDefault();
+
+            endpoint = 'http://localhost:3000/',
+
+            $.ajax({
+                url: endpoint+'?NIM='+encodeURIComponent($.cookie('nim')),
+                type:'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                    alert(tampil);
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
     </script>
 
 </body>

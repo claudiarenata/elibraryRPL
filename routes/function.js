@@ -9,6 +9,14 @@ const moment = require('moment')
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
 
+//database	
+let mysql = require('mysql');	
+let connection = mysql.createConnection({	
+  host     : 'localhost',	
+  user     : 'root',	
+  password : 'adiera',	
+  database : 'perpus_online'	
+});	
 
 //isEmpty
 let isEmpty = (val) => {

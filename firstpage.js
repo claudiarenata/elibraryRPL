@@ -6,6 +6,20 @@ function showtabel() {
     }
 }
 
+function showberhasil() {
+    var x = document.getElementById("berhasil");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
+function showgagal() {
+    var x = document.getElementById("gagal");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+}
+
 // MODAL DETAIL BUKU //
 function showdetail(x) {
     // Get the modal
@@ -34,9 +48,9 @@ function showdetail(x) {
 }
 
 // MODAL PEMINJAMAN //
-function showborrow(x) {
+function showborrow(a,b) {
     // Get the modal
-    var modal = document.getElementById("detailModal");
+    var modal = document.getElementById("borrowModal");
 
     // Get the button that opens the modal
     var btn = document.getElementById("pModal");
@@ -46,7 +60,9 @@ function showborrow(x) {
 
     // When the user clicks the button, open the modal 
     modal.style.display = "block";
-    document.getElementById('iiiooo').innerHTML = x;
+    document.getElementById('masukkan').value = a;
+    document.getElementById('tipepinjam').value = b;
+    // document.getElementById('pinjamyuk').innerHTML = x;
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
@@ -70,6 +86,6 @@ function openTable(evt, tabName) {
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(tabName).style.display = "block";
+    document.getElementById('tabName').style.display = "block";
     evt.currentTarget.className += " active";
 }

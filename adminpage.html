@@ -2,7 +2,7 @@
 <html>
     <link rel="stylesheet" href="adminpage.css">
     <script src="adminpage.js" ></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Perpustakaan ITB</title>
@@ -14,74 +14,72 @@
     <p class="judul"> UPT Perpustakaan ITB </p>
 </h1>
 
-<div class="tab">
+<div class="tab" style="display: inline-flexbox;">
   <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
-  <button class="tablinks" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
+  <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
   <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
+  <a href="login.html"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
 </div>
 
-<div id="Search" class="tabcontent">
-    <fieldset id="corners">
-        <legend>Search</legend>
-        <div class="topnav">
-            <span style="display: inline-flexbox">
-                <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
-                <button onclick="showtabel()"> submit </button>
-            </span>
-        </div><br>
-        <p padding: 10px></p>
-        Kategori
-        <input list="bukuJurnal" name="bukuJurnal">
-        <datalist id="bukuJurnal">
-            <option value="Buku">
-            <option value="Jurnal">
-        </datalist>
-        <p padding: 10px></p>
-        Sort By
-        <input list="sort" name="sort">
-        <datalist id="sort">
-            <option value="Author">
-            <option value="Penerbit">
-        </datalist>
-        <p padding: 10px></p>
-    </fieldset>
-<!-- </form> -->
+<p padding: 10px></p>
+    <div id="Search" class="tabcontent">
+        <fieldset id="corners">
+            <legend>Search</legend>
+            <div class="topnav">
+                <form method="GET" action="#">
+                    <p padding: 20px></p>
+                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
+                    <p padding: 20px></p>
+                    <!-- Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
+                    <p padding: 10px></p> -->
+                    <select style="width: 100px;" id="bookjurnal">
+                        <option value="book">Book</option>
+                        <option value="jurnal">Jurnal</option>
+                    </select><br>
+                    <button id="cariData" onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
+                </form>
+            </div><br>
+        </fieldset>
+        <!-- </form> -->
+        
+        <!-- tabel hasil pencarian -->
+        <table class="tabBuku" id="tabelBuku" style="display: none">
+            <thead id="tabheadbuku">
+                <tr>
+                    <th>ISBN</th>
+                    <th>Judul</th>
+                    <th>Pengarang</th>
+                    <th>Penerbit</th>
+                    <th>Tahun Terbit</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
+                <tr>
+            </thead>
+            <tbody id="tabbodybuku"></tbody>
+        </table>
+        <table class="tabBuku" id="tabelJurnal" style="display: none">
+        <thead id="tabheadjurnal">
+            <tr>
+                <th>ID Jurnal</th>
+                <th>Judul</th>
+                <th>Pengarang</th>
+                <th>Tahun Terbit</th>
+                <th>Kategori</th>
+                <th>Stok</th>
+            <tr>
+        </thead>
+        <tbody id="tabbodyjurnal"></tbody>
+        </table>
 
-<!-- tabel hasil pencarian -->
-    <table class="tabBuku" id="tabelBuku" style="display: none">
-        <tr>
-            <th>ISBN</th>
-            <th>Judul Buku</th> 
-            <th>Pengarang</th>
-            <th>Penerbit</th>
-            <th>Tahun Terbit</th>
-            <th>Kategori</th>
-            <th>Stok</th>
-        </tr>
-        <tr>
-            <td>8120306023</td>
-            <td>Introduction to electrodynamics</td>
-            <td>GRIFFITHS, David J.</td>
-            <td>Prentice Hall of India</td>
-            <td>1995</td>
-            <td>Not Available</td>
-            <td>10</td>
-            <td style="border-color: white;">
-                <span style="display: inline-block">
-                    <button id="dModal" onclick="showdetail()"> Detail</button>
-                </span>
-            </td>
-        </tr>
-    </table>
-    <!-- Detail Modal -->
-    <div id="detailModal" class="modal">
-    <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Detail Buku</p>
+        <!-- Detail Modal -->
+        <div id="detailModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="iiiooo"></p>
+            </div>
         </div>
     </div>
-</div>
 
 <div id="Daftar Peminjaman" class="tabcontent">
     <h3>Daftar Peminjaman</h3>
@@ -89,35 +87,32 @@
     <style>
             table#tabelPeminjaman tr:nth-child(even) { background-color:#f2f2f2; }
     </style>
-    <table 
+    <table  id="tabelPeminjaman" class="tabPeminjaman" method="GET" action="#"
     style="border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    border: 1px solid #ddd;" class="tabPeminjaman" id="tabelPeminjaman" style="display: none">
+    border: 1px solid #ddd;" style="display: none">
+    <thead id="tabheadpeminjaman">
         <tr>
-            <th style=" text-align: left;padding: 16px;">ID Peminjaman</th>
-            <th style=" text-align: left;padding: 16px;">NIM</th> 
-            <th style=" text-align: left;padding: 16px;">Tanggal Peminjaman</th>
-            <th style=" text-align: left;padding: 16px;">Tanggal Pengembalian</th>
-            <th style=" text-align: left;padding: 16px;">Status Pengembalian</th>
-            <th style=" text-align: left;padding: 16px;">Denda</th>
-            <th style=" text-align: left;padding: 16px;">ISBN</th>
-            <th style=" text-align: left;padding: 16px;">ID Jurnal</th>
-            <th style=" text-align: left;padding: 16px;">Aktif</th>
+            <th style=" text-align: left;padding: 16px;" name="IDPeminjaman">ID Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;" name="NIM">NIM</th> 
+            <th style=" text-align: left;padding: 16px;" name="Tanggal_Peminjaman">Tanggal Peminjaman</th>
+            <th style=" text-align: left;padding: 16px;" name="Tanggal_Pengembalian">Tanggal Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;" name="Status_Pengembalian">Status Pengembalian</th>
+            <th style=" text-align: left;padding: 16px;" name="Denda">Denda</th>
+            <th style=" text-align: left;padding: 16px;" name="ISBN">ISBN</th>
+            <th style=" text-align: left;padding: 16px;" name="IDJurnal">ID Jurnal</th>
         </tr>
-        <tr>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">18217048</td>
-            <td style=" text-align: left;padding: 16px;">17 November 2019</td>
-            <td style=" text-align: left;padding: 16px;">Not Available</td>
-            <td style=" text-align: left;padding: 16px;">Belum Dikembalikan</td>
-            <td style=" text-align: left;padding: 16px;">0</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">8120306023</td>
-            <td style=" text-align: left;padding: 16px;">Tidak Aktif</td>
-        </tr>
-    </table> 
+    </thead>
+    <tbody id="tabbodypeminjaman"></tbody>
+    </table>
 </div>
+
+<form id="formstatus" method="POST" action="#" style="display:none">
+    <a type="hidden" id="simpanan"></a>
+</form>
+
+<a type="hidden" id="nimnotif"></a>
 
 <div id="Update Buku Jurnal" class="tabcontent">
     <div class="wrap">
@@ -132,7 +127,7 @@
         <input type="text" id="ISBN" name="ISBN" placeholder="ISBN">
           
         <label for="judulBuku">Judul Buku</label>
-        <input type="text" name="Judul_Buku" placeholder="Judul Buku">
+        <input type="text" id = "judul" name="Judul_Buku" placeholder="Judul Buku">
 
         <label for="Pengarang">Pengarang</label>
         <input type="text" id="Pengarang" name="Pengarang" placeholder="Nama Pengarang">
@@ -141,23 +136,23 @@
         <input type="text" id="Penerbit" name="Penerbit" placeholder="Nama Penerbit">
 
         <label for="tahunTerbit">Tahun Terbit</label>
-        <input type="text" name="Tahun_Terbit" placeholder="Tahun Terbit">
+        <input type="text" id="Tahun" name="Tahun_Terbit" placeholder="Tahun Terbit">
         
           
         <label for="kategori">Kategori</label>
-        <select name="Kategori">
+        <select id="Kategori" name="Kategori">
             <option value="Infrastruktur">Infrastruktur</option>
             <option value="Arsitektur">Arsitektur</option>
             <option value="Teknologi">Teknologi</option>
         </select>
 
         <label for="sinopsis">Sinopsis</label>
-        <input type="text" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
+        <input type="text" id="sinopsis" name="Sinopsis" placeholder="Tuliskan Sinopsis Buku ini">
         
         <label for="Stok_Buku">Stok</label>
         <input type="number" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
     
-        <input type="submit" value="Submit">
+        <input type="submit" id="submit_btn" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
             <button type="button" class="cancelbtn" onclick="hideformbuku();enablejurnal(); enablebuku()">Cancel</button>
         </div>
@@ -193,46 +188,184 @@
         <label for="stokJurnal">Stok</label>
         <input type="number" id="Stok_Jurnal" name="Stok_Jurnal" placeholder="Stok">
           
-        <input type="submit" value="Submit">
+        <input type="submit" id="submit_btn1" value="Submit">
         <div class="container" style="background-color:#f1f1f1">
                 <button type="button" class="cancelbtn" onclick="hideformjurnal(); enablejurnal(); enablebuku();">Cancel</button>
         </div>
     </form>  
 </div>
 
+
+
 <script>
-$("#formbuku").submit(function(event){
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-	var form_data = $(this).serialize(); //Creates new FormData object
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data,
-		contentType: false,
-		cache: false,
-		processData:false
-    }).done(function(response){ //
-        $("#server-results").html(response);
+
+    /* attach a submit handler to the form */
+    $("#formbuku").submit(function(event) {
+
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+        var $form = $( this ),
+          url = $form.attr( 'action' );
+
+      /* Send the data using post with element id name and name2*/
+        var posting = $.post( url, { 
+            ISBN: $('#ISBN').val(), 
+            Judul_Buku: $('#judul').val(), 
+            Pengarang: $('#Pengarang').val(),
+            Penerbit: $('#Penerbit').val(), 
+            Tahun_Terbit : $('#Tahun').val(), 
+            Kategori : $('#Kategori').val(), 
+            Sinopsis : $('#sinopsis').val(), 
+            Stok_Buku :$('#Stok_Buku').val()   }
+            );
+
+        /* Alerts the results */
+        posting.done(function( data ) {
+            alert(data['message']);
+            location.reload();
+        });
     });
-});
-$("#formjurnal").submit(function(event){
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-	var form_data = $(this).serialize(); //Creates new FormData object
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data,
-		contentType: false,
-		cache: false,
-		processData:false
-    }).done(function(response){ //
-        $("#server-results").html(response);
+
+    $("#formjurnal").submit(function(event) {
+
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+        var $form = $( this ),
+            url = $form.attr( 'action' );
+
+        /* Send the data using post with element id name and name2*/
+        var posting = $.post( url, { 
+        IDJurnal: $('#IDJurnal').val(), 
+        Judul_Jurnal: $('#Judul_Jurnal').val(), 
+        Pengarang_Jurnal: $('#Pengarang_Jurnal').val(),
+        Abstraksi: $('#Abstraksi').val(), 
+        Tahun_Terbit_Jurnal : $('#Tahun_Terbit_Jurnal').val(), 
+        Status_e_jurnal: $('#Status_e_jurnal').val(), 
+        Kategori_Jurnal : $('#Kategori_Jurnal').val(), 
+        Stok_Jurnal :$('#Stok_Jurnal').val()   }
+        );
+
+        /* Alerts the results */
+        posting.done(function( data ) {
+            alert(data['message']);
+            location.reload();
+        });
     });
+
+$(document).ready(function() {
+    $("#daftarPeminjaman").click(function() {
+        var tabmodiv = document.getElementById('tabbodypeminjaman');
+        document.getElementById('tabelPeminjaman').style.display = 'block';
+        $.ajax({
+                type: 'GET',
+                url: "http://localhost:3000/peminjaman",
+                dataType: 'json',                                         
+                success: function(response) {                        
+                        content = "";
+                        $.each(response, function (key, value) {
+                            content += 
+                                "<tr>" +  
+                                    "<td>" + value.IDPeminjaman+"</th>\n" +
+                                    "<td>" + value.NIM +"</th>\n" +
+                                    "<td>" + value.Tanggal_Peminjaman +"</th>\n" + 
+                                    "<td>" + value.Tanggal_Pengembalian +"</th>\n" + 
+                                    "<td>" + value.Status_Pengembalian+"</th>\n" + 
+                                    "<td>" + value.Denda +"</th>\n"+
+                                    "<td>" + value.ISBN+ "</th>\n" + 
+                                    "<td>" + value.IDJurnal +"</th>\n" +
+                                    "<td><button id='sbtn' onclick=\"changeStatus('"+value.IDPeminjaman+"')\">Ubah Status</button>" +
+                                "</tr>";
+                        });
+                        tabmodiv.innerHTML = content;
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });  
+    });        
 });
+
+function changeStatus(IDPeminjaman){
+        simpan(IDPeminjaman); 
+        var idminjem = document.getElementById('simpanan').innerHTML;
+        $.ajax({
+            type : 'PUT', 
+            url :"http://localhost:3000/peminjaman?IDPeminjaman="+idminjem, 
+            dataType : 'json', 
+            contentType: 'application/json',
+            success : function(response) {
+                alert(response['message']);
+                location.reload();
+            }, 
+            error : function(response) {
+                console.log(response); 
+            }
+        });
+};
+
+$(document).ready(function(){
+            $("#cariData").click(function(e) {
+                e.preventDefault();
+                var e = document.getElementById('bookjurnal');
+                var pilihan = e.options[e.selectedIndex].value;
+                if(pilihan=='book'){
+                    var endpoint = 'http://localhost:3000/book';
+                    var tabmodiv = document.getElementById('tabbodybuku');
+                    document.getElementById('tabelBuku').style.display = 'block';
+                    document.getElementById('tabelJurnal').style.display = 'none';
+                } else {
+                    var endpoint = 'http://localhost:3000/jurnal';
+                    var tabmodiv = document.getElementById('tabbodyjurnal');
+                    document.getElementById('tabelJurnal').style.display = 'block';
+                    document.getElementById('tabelBuku').style.display = 'none';
+                }
+                $.ajax({
+                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value),
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        content="";
+                        if (pilihan == 'book') {
+                            $.each(response, function(key, value){
+                            content+=
+                                "<tr>" +
+                                    "<td>"+value.ISBN+"</th>\n" +
+                                    "<td>"+value.Judul_Buku+"</th>\n" +
+                                    "<td>"+value.Pengarang+"</th>\n" +
+                                    "<td>"+value.Penerbit+"</th>\n" +
+                                    "<td>"+value.Tahun_Terbit+"</th>\n" +
+                                    "<td>"+value.Kategori+"</th>\n" +
+                                    "<td>"+value.Stok_Buku+"</th>\n" +
+                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
+                                "</tr>";
+                            });
+                        } else {
+                            $.each(response, function(key, value){
+                            content+=
+                                "<tr>" +
+                                    "<td>"+value.IDJurnal+"</th>\n" +
+                                    "<td>"+value.Judul_Jurnal+"</th>\n" +
+                                    "<td>"+value.Pengarang_Jurnal+"</th>\n" +
+                                    "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
+                                    "<td>"+value.Kategori_Jurnal+"</th>\n" +
+                                    "<td>"+value.Stok_Jurnal+"<th>\n" +
+                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
+                                "<tr>";
+                            });
+                        }
+                        tabmodiv.innerHTML = content;
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            }); 
+        });
+
 </script>
 
 </body>
