@@ -35,8 +35,3 @@ function disableadm() {
 function enableadm() {
     document.getElementById("adm").disabled = false;
 }
-
-// fungsi simpen nim dari login ditaro ke firstpage.html
-function simpanNIM(x) {
-    document.getElementById('nimnotif').value = x;
-}

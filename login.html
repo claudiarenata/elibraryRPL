@@ -65,18 +65,14 @@
         </div>
     </form>
 
-    <!-- <a id="nimsimpan" type="hidden"></a> -->
-
     <script>
         // // fungsi login mahasiswa
         $('#loginm').click(function(){
             var usernamemhs = document.getElementById('nim').value;
             var pswmhs = document.getElementById('pswm').value;
             
-            url = 'http://localhost:3000/login/user';
-
             $.ajax({
-                url: url,
+                url: 'http://localhost:3000/login/user',
                 type:'POST',
                 dataType: 'json',
                 data: {
@@ -89,7 +85,7 @@
                 },
                 error: function(response) {
                     console.log(response);
-                    alert('SALAH'); 
+                    alert('Maaf, harap coba lagi'); 
                 }
             });
         });
@@ -98,10 +94,8 @@
             var usernameadm = document.getElementById('uname').value;
             var pswadm = document.getElementById('pswa').value;
             
-            url = 'http://localhost:3000/login/admin';
-
             $.ajax({
-                url: url,
+                url: 'http://localhost:3000/login/admin',
                 type:'POST',
                 dataType: 'json',
                 data: {
@@ -114,7 +108,7 @@
                 },
                 error: function(response) {
                     console.log(response);
-                    alert('SALAH'); 
+                    alert('Maaf, harap coba lagi');
                 }
             });
         });
