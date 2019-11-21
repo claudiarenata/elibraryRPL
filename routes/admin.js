@@ -15,7 +15,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : 'adiera',	
+  password : '',	
   database : 'perpus_online'	
 });	
 	
@@ -96,13 +96,23 @@ app.get('/peminjaman/:id', function (req, res) {
 //POST Data Buku Baru
 app.post('/book',function(req,res){
 	try{
-		let query = 'INSERT INTO buku (ISBN, Judul_Buku, Pengarang, Sinopsis, Penerbit, Tahun_Terbit, Kategori, Stok_Buku) VALUES (?,?,?,?,?,?,?,?)'
+		let query = 'SELECT * FROM buku WHERE ISBN = ?'
 		let data = req.body
-		let instance = [data.ISBN, data.Judul_Buku,data.Pengarang,data.Sinopsis, data.Penerbit, data.Tahun_Terbit, data.Kategori, data.Stok_Buku]
-		connection.query(query, instance, function (error, results, fields) {
+		let ISBN = data.ISBN
+		
+		connection.query(query, ISBN, function(error, results, fields){
 			if (error) throw error;
-			//console.log(results);
-			res.json({"response-code":200,"message":"Record successfully added"})
+			if (func.isEmpty(results)){
+				let query = 'INSERT INTO buku (ISBN, Judul_Buku, Pengarang, Sinopsis, Penerbit, Tahun_Terbit, Kategori, Stok_Buku) VALUES (?,?,?,?,?,?,?,?)'
+				let instance = [ISBN, data.Judul_Buku,data.Pengarang,data.Sinopsis, data.Penerbit, data.Tahun_Terbit, data.Kategori, data.Stok_Buku]
+				connection.query(query, instance, function (error, results, fields) {
+					if (error) throw error;
+					//console.log(results);
+					res.json({"response-code":200,"message":"Record successfully added"})
+				})
+			} else {
+				res.json({"response-code":422,"message":"Data Already Exist"})
+			}
 		})
 	} catch(err) {
 		console.log(err)
@@ -113,13 +123,23 @@ app.post('/book',function(req,res){
 //POST data Jurnal Baru
 app.post('/jurnal',function(req,res){
 	try{
-		let query = 'INSERT INTO jurnal (IDJurnal, Judul_Jurnal, Pengarang_Jurnal, Abstraksi, Status_e_jurnal, Tahun_Terbit_Jurnal, Kategori_Jurnal, Stok_Jurnal) VALUES (?,?,?,?,?,?,?,?)'
+		let query = 'SELECT * FROM jurnal WHERE IDJurnal = ?'
 		let data = req.body
-		let instance = [data.IDJurnal, data.Judul_Jurnal, data.Pengarang_Jurnal, data.Abstraksi, data.Status_e_jurnal, data.Tahun_Terbit_Jurnal, data.Kategori_Jurnal, data.Stok_Jurnal]
-		connection.query(query, instance, function (error, results, fields) {
+		let IDJurnal = data.IDJurnal
+		
+		connection.query(query, IDJurnal, function (error, results, fields){
 			if (error) throw error;
-			//console.log(results);
-			res.json({"response-code":200,"message":"Record successfully added"})
+			if (func.isEmpty(results)){
+				let query = 'INSERT INTO jurnal (IDJurnal, Judul_Jurnal, Pengarang_Jurnal, Abstraksi, Status_e_jurnal, Tahun_Terbit_Jurnal, Kategori_Jurnal, Stok_Jurnal) VALUES (?,?,?,?,?,?,?,?)'
+				let instance = [IDJurnal, data.Judul_Jurnal, data.Pengarang_Jurnal, data.Abstraksi, data.Status_e_jurnal, data.Tahun_Terbit_Jurnal, data.Kategori_Jurnal, data.Stok_Jurnal]
+				connection.query(query, instance, function (error, results, fields) {
+					if (error) throw error;
+					//console.log(results);
+					res.json({"response-code":200,"message":"Record successfully added"})
+				})
+			} else {
+				res.json({"response-code":422,"message":"Data Already Exist"})
+			}
 		})
 	} catch(err) {
 		console.log(err)
