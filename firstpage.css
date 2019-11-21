@@ -14,6 +14,8 @@ body {
   background-color:DodgerBlue;
   padding: 15px;
   color:#FFFFFF;
+  margin-top:0; 
+  margin-bottom:0; 
 }
 
 /* Style the tab */
