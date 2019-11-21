@@ -24,7 +24,7 @@
     <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
     <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
     <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
-    <a href="/home"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
+    <a href="http://localhost:3000/home"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
 </div>
        
 
@@ -180,7 +180,10 @@
         <input type="text" id="Tahun_Terbit_Jurnal" name="Tahun_Terbit_Jurnal" placeholder="Tahun Terbit">
         
         <label for="statusJurnal">Status e-Journal</label>
-        <input type="text" id="Status_e_jurnal" name="Status_e_jurnal" placeholder="Status e-Journal">
+        <select id="Status_e_jurnal" name="Status_e_jurnal">
+                <option value="Ada">Ada</option>
+                <option value="Tidak">Tidak Ada</option>
+        </select>
           
         <label for="kategoriJurnal">Kategori</label>
         <select id="Kategori_Jurnal" name="Kategori_Jurnal">

@@ -156,7 +156,6 @@ input[type=text], select {
   text-decoration: none;
   padding: 15px 26px;
   position: relative;
-  display: inline-block;
   float: right;
   /* background-color: white); */
   color: #333;
