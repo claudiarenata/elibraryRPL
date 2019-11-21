@@ -326,6 +326,7 @@ app.post('/login/admin',function(req,res){
 			    //console.log(results);
 			    let data = results
 			    if (func.isEmpty(data)){
+					res.code(401);
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
@@ -355,6 +356,7 @@ app.post('/login/user',function(req,res){
 			    //console.log(results);
 			    let data = results
 			    if (func.isEmpty(data)){
+					res.code(401);
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
