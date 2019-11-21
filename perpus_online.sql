@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2019 at 05:23 PM
+-- Generation Time: Nov 21, 2019 at 11:44 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -134,13 +134,6 @@ CREATE TABLE `jurnal` (
   `Stok_Jurnal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `jurnal`
---
-
-INSERT INTO `jurnal` (`IDJurnal`, `Judul_Jurnal`, `Pengarang_Jurnal`, `Abstraksi`, `Status_e_jurnal`, `Tahun_Terbit_Jurnal`, `Kategori_Jurnal`, `Stok_Jurnal`) VALUES
-(1, 'Pengaruh kejepit pintu pada mental anak', 'Robert Handika', 'Ngasal', 'Hampir kelar', '2019', 'Komedi', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -191,7 +184,8 @@ CREATE TABLE `peminjaman` (
 --
 
 INSERT INTO `peminjaman` (`IDPeminjaman`, `Tanggal_Peminjaman`, `Tanggal_Pengembalian`, `Status_Pengembalian`, `Denda`, `ISBN`, `NIM`, `IDJurnal`) VALUES
-(1, '2019-01-10', '2019-01-20', 1, 500000, '1234567891012', 18216308, NULL);
+(1, '2019-01-10', '2019-01-20', 1, 500000, '1234567891012', 18216308, NULL),
+(2, '2019-01-10', '2019-01-20', 1, 305000, '1234567891012', 18216473, NULL);
 
 --
 -- Indexes for dumped tables
@@ -230,6 +224,16 @@ ALTER TABLE `peminjaman`
   ADD KEY `Jurnal` (`IDJurnal`),
   ADD KEY `Mahasiswa` (`NIM`),
   ADD KEY `ISBN` (`ISBN`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `peminjaman`
+--
+ALTER TABLE `peminjaman`
+  MODIFY `IDPeminjaman` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
