@@ -1,5 +1,4 @@
-# elibraryRPL
-# E-Library ITB
+# E-Library ITB - RPL
 
 Sistem peminjaman online buku dan jurnal UPT Perpustakaan ITB (E-Library ITB) merupakan sebuah sistem yang dapat menyediakan layanan untuk peminjaman buku dan jurnal secara online. Mahasiswa dapat mencari buku sesuai keinginan dan sistem akan memberikan informasi mengenai ketersediaan stok yang dapat dipinjam. Sistem juga dapat memberikan notifikasi berupa lama waktu peminjaman dan jumlah denda apabila mahasiswa terlambat untuk mengembalikan buku/jurnal. Juga dapat dilakukan pencarian jurnal yang tersedia dalam bentuk fisik dan e-journal.
 
