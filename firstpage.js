@@ -89,3 +89,7 @@ function openTable(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+// function simpanlagi(x) {
+//     document.getElementById('NIM') = x
+// }

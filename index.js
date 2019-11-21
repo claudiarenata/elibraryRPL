@@ -43,6 +43,10 @@ app.get('/login.js', function (req,res){
     res.sendFile(path.join(__dirname+'/login.js'))
 }); 
 
+app.get('/jquery.cookie.js', function (req,res){
+    res.sendFile(path.join(__dirname+'/jquery.cookie.js'))
+}); 
+
 app.use('/',router)
 
 // here you set that all templates are located in `/views` directory

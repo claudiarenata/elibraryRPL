@@ -96,8 +96,8 @@
                         <input type="text" id="masukkan" disabled>
                         <input type="hidden" id="tipepinjam">
                         
-                        <label for="NIM">ID NIM :</label>
-                        <input type="text" id="NIM" name="NIM" placeholder="Masukkan NIM..." required>
+                        <!-- <label for="NIM">ID NIM :</label> -->
+                        <!-- <input type="text" id="NIM" disabled> -->
 
                         <button id="submitPinjam">submit</button>
                     </form>
@@ -181,7 +181,7 @@
             /* Send the data using post with element id name and name2*/
             var elemen = document.getElementById('tipepinjam').value;
             var inputan = document.getElementById('masukkan').value;
-            var nimorang = document.getElementById('NIM').value;
+            var nimorang = $.cookie('nim');
             if (parseInt(elemen) == 1) {
                 var posting = $.post(url, {ISBN :inputan, NIM :nimorang});
             } else {
@@ -190,9 +190,10 @@
 
             /* Alerts the results */
             posting.done(function( data ) {
-                document.getElementById('result').innerHTML = data['message'];
-                document.getElementById('result').style.display = 'block';
+                    document.getElementById('result').innerHTML = data['message'];
+                    document.getElementById('result').style.display = 'block';
             });
+            
         });
 
         $("#notif").click(function(e) {
@@ -200,14 +201,18 @@
             /* stop form from submitting normally */
             e.preventDefault();
 
-            endpoint = 'http://localhost:3000/',
+            endpoint = 'http://localhost:3000/notifikasi',
 
             $.ajax({
-                url: endpoint+'?NIM='+encodeURIComponent($.cookie('nim')),
+                url: endpoint+'?nim='+encodeURIComponent($.cookie('nim')),
                 type:'GET',
                 dataType: 'json',
                 success: function(response) {
-                    var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                    if (response['telat'] == true) {
+                        var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                    } else {
+                        var tampil = "Sisa hari untuk meminjam buku : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                    }
                     alert(tampil);
                 },
                 error: function(response) {
