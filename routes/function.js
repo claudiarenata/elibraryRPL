@@ -9,7 +9,6 @@ const moment = require('moment')
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
 
-
 //isEmpty
 let isEmpty = (val) => {
     let typeOfVal = typeof val;
