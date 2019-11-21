@@ -11,40 +11,40 @@ let adminRoute = require('./routes/admin')
 let func = require('./routes/function')
 
 router.get('/buku', function (req,res){
-    res.sendFile(path.join(__dirname+'/adminpage.html'))
+    res.sendFile(path.join(__dirname+'/public/html/adminpage.html'))
 })
 
 app.get('/adminpage.css', function (req,res){
-    res.sendFile(path.join(__dirname+'/adminpage.css'))
+    res.sendFile(path.join(__dirname+'/public/css/adminpage.css'))
 }); 
 
 app.get('/firstpage.css', function (req,res){
-    res.sendFile(path.join(__dirname+'/firstpage.css'))
+    res.sendFile(path.join(__dirname+'/public/css/firstpage.css'))
 }); 
 
 app.get('/login.css', function (req,res){
-    res.sendFile(path.join(__dirname+'/login.css'))
+    res.sendFile(path.join(__dirname+'/public/css/login.css'))
 }); 
 
 
 app.get('/logo-itb-512px.png', function (req,res){
-    res.sendFile(path.join(__dirname+'/logo-itb-512px.png'))
+    res.sendFile(path.join(__dirname+'/public/image/logo-itb-512px.png'))
 }); 
 
 app.get('/adminpage.js', function (req,res){
-    res.sendFile(path.join(__dirname+'/adminpage.js'))
+    res.sendFile(path.join(__dirname+'/public/js/adminpage.js'))
 }); 
 
 app.get('/firstpage.js', function (req,res){
-    res.sendFile(path.join(__dirname+'/firstpage.js'))
+    res.sendFile(path.join(__dirname+'/public/js/firstpage.js'))
 }); 
 
 app.get('/login.js', function (req,res){
-    res.sendFile(path.join(__dirname+'/login.js'))
+    res.sendFile(path.join(__dirname+'/public/js/login.js'))
 }); 
 
 app.get('/jquery.cookie.js', function (req,res){
-    res.sendFile(path.join(__dirname+'/jquery.cookie.js'))
+    res.sendFile(path.join(__dirname+'/public/js/jquery.cookie.js'))
 }); 
 
 app.use('/',router)
@@ -58,15 +58,15 @@ app.set('view engine', 'ejs');
 
 
 app.get('/adminpage', function(req,res){
-    res.sendFile(path.join(__dirname+'/adminpage.html'))
+    res.sendFile(path.join(__dirname+'/public/html/adminpage.html'))
 })
 
 app.get('/userpage', function(req,res){
-    res.sendFile(path.join(__dirname+'/firstpage.html'))
+    res.sendFile(path.join(__dirname+'/public/html/firstpage.html'))
 })
 
 app.get('/home', function(req,res){
-    res.sendFile(path.join(__dirname+'/login.html'))
+    res.sendFile(path.join(__dirname+'/public/html/login.html'))
 })
 
 app.use(function(req, res, next) {
