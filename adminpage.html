@@ -14,74 +14,72 @@
     <p class="judul"> UPT Perpustakaan ITB </p>
 </h1>
 
-<div class="tab">
+<div class="tab" style="display: inline-flexbox;">
   <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
   <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
   <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
+  <a href="login.html"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
 </div>
 
-<div id="Search" class="tabcontent">
-    <fieldset id="corners">
-        <legend>Search</legend>
-        <div class="topnav">
-            <span style="display: inline-flexbox">
-                <input type="text" placeholder="Mencari Buku/Jurnal..." name="keyword" style="width: 30%; float: left">
-                <button onclick="showtabel()"> submit </button>
-            </span>
-        </div><br>
-        <p padding: 10px></p>
-        Kategori
-        <input list="bukuJurnal" name="bukuJurnal">
-        <datalist id="bukuJurnal">
-            <option value="Buku">
-            <option value="Jurnal">
-        </datalist>
-        <p padding: 10px></p>
-        Sort By
-        <input list="sort" name="sort">
-        <datalist id="sort">
-            <option value="Author">
-            <option value="Penerbit">
-        </datalist>
-        <p padding: 10px></p>
-    </fieldset>
+<p padding: 10px></p>
+    <div id="Search" class="tabcontent">
+        <fieldset id="corners">
+            <legend>Search</legend>
+            <div class="topnav">
+                <form method="GET" action="#">
+                    <p padding: 20px></p>
+                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
+                    <p padding: 20px></p>
+                    <!-- Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
+                    <p padding: 10px></p> -->
+                    <select style="width: 100px;" id="bookjurnal">
+                        <option value="book">Book</option>
+                        <option value="jurnal">Jurnal</option>
+                    </select><br>
+                    <button id="cariData" onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
+                </form>
+            </div><br>
+        </fieldset>
+        <!-- </form> -->
+        
+        <!-- tabel hasil pencarian -->
+        <table class="tabBuku" id="tabelBuku" style="display: none">
+            <thead id="tabheadbuku">
+                <tr>
+                    <th>ISBN</th>
+                    <th>Judul</th>
+                    <th>Pengarang</th>
+                    <th>Penerbit</th>
+                    <th>Tahun Terbit</th>
+                    <th>Kategori</th>
+                    <th>Stok</th>
+                <tr>
+            </thead>
+            <tbody id="tabbodybuku"></tbody>
+        </table>
+        <table class="tabBuku" id="tabelJurnal" style="display: none">
+        <thead id="tabheadjurnal">
+            <tr>
+                <th>ID Jurnal</th>
+                <th>Judul</th>
+                <th>Pengarang</th>
+                <th>Tahun Terbit</th>
+                <th>Kategori</th>
+                <th>Stok</th>
+            <tr>
+        </thead>
+        <tbody id="tabbodyjurnal"></tbody>
+        </table>
 
-
-<!-- tabel hasil pencarian -->
-    <table class="tabBuku" id="tabelBuku" style="display: none">
-        <tr>
-            <th>ISBN</th>
-            <th>Judul Buku</th> 
-            <th>Pengarang</th>
-            <th>Penerbit</th>
-            <th>Tahun Terbit</th>
-            <th>Kategori</th>
-            <th>Stok</th>
-        </tr>
-        <tr>
-            <td>8120306023</td>
-            <td>Introduction to electrodynamics</td>
-            <td>GRIFFITHS, David J.</td>
-            <td>Prentice Hall of India</td>
-            <td>1995</td>
-            <td>Not Available</td>
-            <td>10</td>
-            <td style="border-color: white;">
-                <span style="display: inline-block">
-                    <button id="dModal" onclick="showdetail()"> Detail</button>
-                </span>
-            </td>
-        </tr>
-    </table>
-    <!-- Detail Modal -->
-    <div id="detailModal" class="modal">
-    <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Detail Buku</p>
+        <!-- Detail Modal -->
+        <div id="detailModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="iiiooo"></p>
+            </div>
         </div>
     </div>
-</div>
 
 <div id="Daftar Peminjaman" class="tabcontent">
     <h3>Daftar Peminjaman</h3>
@@ -225,7 +223,8 @@
 
         /* Alerts the results */
         posting.done(function( data ) {
-            alert('success');
+            alert(data['message']);
+            location.reload();
         });
     });
 
@@ -252,7 +251,8 @@
 
         /* Alerts the results */
         posting.done(function( data ) {
-        alert('success');
+            alert(data['message']);
+            location.reload();
         });
     });
 
@@ -289,7 +289,7 @@ $(document).ready(function() {
     });        
 });
 
-   function changeStatus(IDPeminjaman){
+function changeStatus(IDPeminjaman){
         simpan(IDPeminjaman); 
         var idminjem = document.getElementById('simpanan').innerHTML;
         $.ajax({
@@ -305,7 +305,67 @@ $(document).ready(function() {
                 console.log(response); 
             }
         });
-    };
+};
+
+$(document).ready(function(){
+            $("#cariData").click(function(e) {
+                e.preventDefault();
+                var e = document.getElementById('bookjurnal');
+                var pilihan = e.options[e.selectedIndex].value;
+                if(pilihan=='book'){
+                    var endpoint = 'http://localhost:3000/book';
+                    var tabmodiv = document.getElementById('tabbodybuku');
+                    document.getElementById('tabelBuku').style.display = 'block';
+                    document.getElementById('tabelJurnal').style.display = 'none';
+                } else {
+                    var endpoint = 'http://localhost:3000/jurnal';
+                    var tabmodiv = document.getElementById('tabbodyjurnal');
+                    document.getElementById('tabelJurnal').style.display = 'block';
+                    document.getElementById('tabelBuku').style.display = 'none';
+                }
+                $.ajax({
+                    url: endpoint+'?judul='+encodeURIComponent(document.getElementById('judul').value),
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        content="";
+                        if (pilihan == 'book') {
+                            $.each(response, function(key, value){
+                            content+=
+                                "<tr>" +
+                                    "<td>"+value.ISBN+"</th>\n" +
+                                    "<td>"+value.Judul_Buku+"</th>\n" +
+                                    "<td>"+value.Pengarang+"</th>\n" +
+                                    "<td>"+value.Penerbit+"</th>\n" +
+                                    "<td>"+value.Tahun_Terbit+"</th>\n" +
+                                    "<td>"+value.Kategori+"</th>\n" +
+                                    "<td>"+value.Stok_Buku+"</th>\n" +
+                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
+                                "</tr>";
+                            });
+                        } else {
+                            $.each(response, function(key, value){
+                            content+=
+                                "<tr>" +
+                                    "<td>"+value.IDJurnal+"</th>\n" +
+                                    "<td>"+value.Judul_Jurnal+"</th>\n" +
+                                    "<td>"+value.Pengarang_Jurnal+"</th>\n" +
+                                    "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
+                                    "<td>"+value.Kategori_Jurnal+"</th>\n" +
+                                    "<td>"+value.Stok_Jurnal+"<th>\n" +
+                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
+                                "<tr>";
+                            });
+                        }
+                        tabmodiv.innerHTML = content;
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            }); 
+        });
+
 </script>
 
 </body>
