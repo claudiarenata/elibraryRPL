@@ -3,6 +3,10 @@
     <link rel="stylesheet" href="adminpage.css">
     <script src="adminpage.js" ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Perpustakaan ITB</title>
@@ -14,15 +18,17 @@
     <p class="judul"> UPT Perpustakaan ITB </p>
 </h1>
 
-<div class="tab" style="display: inline-flexbox;">
-  <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
-  <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
-  <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
-  <a href="login.html"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
-</div>
 
-<p padding: 10px></p>
-    <div id="Search" class="tabcontent">
+
+<div class="tab" style="display: inline-flexbox;">
+    <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
+    <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
+    <button class="tablinks" onclick="openTable(event, 'Update Buku Jurnal')">Update Buku Jurnal</button>
+    <a href="login.html"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
+</div>
+       
+
+<div id="Search" class="tabcontent">
         <fieldset id="corners">
             <legend>Search</legend>
             <div class="topnav">
@@ -77,7 +83,7 @@
                 <p id="iiiooo"></p>
             </div>
         </div>
-    </div>
+</div>
 
 <div id="Daftar Peminjaman" class="tabcontent">
     <h3>Daftar Peminjaman</h3>
@@ -225,6 +231,7 @@
             location.reload();
         });
     });
+
 
     $("#formjurnal").submit(function(event) {
 

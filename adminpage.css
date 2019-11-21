@@ -53,6 +53,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
   background-color:DodgerBlue;
   padding: 15px;
   color:#FFFFFF;
+  margin-top:0; 
+  margin-bottom:0; 
 }
 
 /* Add a background color to the top navigation */
@@ -203,7 +205,17 @@ input[type=text], select {
     /* background-color: white); */
     color: #333;
   }
- 
+
+  /* .navbar {
+    margin-bottom: 50px;
+    border-radius: 0;
+  }
+  
+  /* Remove the jumbotron's default bottom margin */ 
+   /* .jumbotron {
+    margin-bottom: 0;
+  }
+  */ 
   
    
   
