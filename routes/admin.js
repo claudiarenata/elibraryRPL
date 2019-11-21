@@ -187,7 +187,6 @@ app.put('/jurnal',function(req,res){
 //PUT data peminjaman
 app.put('/peminjaman',function(req,res){
 	try{
-		console.log("masuk kesini")
 		let IDPeminjaman = req.query.IDPeminjaman
 		
 		let query = 'SELECT * From peminjaman WHERE IDPeminjaman=?'
