@@ -291,7 +291,7 @@ function tambahStok(tipe, id, callback){
 					if (err) {
 						onsole.log(err)
 					} else {
-						let ret = ({"response-code":200,"message":"Record successfully added"})
+						let ret = ({"response-code":200,"message":"Record successfully updated"})
 						callback(error,ret)
 					}
 				})
@@ -318,7 +318,7 @@ function tambahStok(tipe, id, callback){
 					if (err) {
 						console.log(err)
 					} else {
-						let ret = ({"response-code":200,"message":"Record successfully added"})
+						let ret = ({"response-code":200,"message":"Record successfully updated"})
 						callback(error,ret)
 					}
 				})
