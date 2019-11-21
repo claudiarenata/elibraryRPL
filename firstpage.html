@@ -88,20 +88,17 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <span class="close">&times;</span>
-                    <form id="formpinjam" method="POST" action="#">
-                        <h1>Form Peminjaman Buku/Jurnal</h1>
-                        <p>Isi data dibawah ini :</p>
-                        
-                        <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
-                        <input type="text" id="masukkan" disabled>
-                        <input type="hidden" id="tipepinjam">
-                        
-                        <!-- <label for="NIM">ID NIM :</label> -->
-                        <!-- <input type="text" id="NIM" disabled> -->
+                <form id="formpinjam" method="POST" action="#">
+                    <h1>Form Peminjaman Buku/Jurnal</h1>
+                    <p>Isi data dibawah ini :</p>
+                    
+                    <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
+                    <input type="text" id="masukkan" disabled>
+                    <input type="hidden" id="tipepinjam">
 
-                        <button id="submitPinjam">submit</button>
-                    </form>
-                    <p id="result" style="display: none;"></p>
+                    <button id="submitPinjam">submit</button>
+                </form>
+                <p id="result" style="display: none;"></p>
             </div>
         </div>
     </div>
@@ -192,6 +189,8 @@
             posting.done(function( data ) {
                     document.getElementById('result').innerHTML = data['message'];
                     document.getElementById('result').style.display = 'block';
+                    // location.reload(3000);
+                    window.setTimeout(function(){window.location.reload()}, 4000);
             });
             
         });
@@ -207,18 +206,28 @@
                 url: endpoint+'?nim='+encodeURIComponent($.cookie('nim')),
                 type:'GET',
                 dataType: 'json',
-                success: function(response) {
-                    if (response['telat'] == true) {
-                        var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
-                    } else {
-                        var tampil = "Sisa hari untuk meminjam buku : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
-                    }
-                    alert(tampil);
-                },
-                error: function(response) {
-                    console.log(response);
+            }).done(function(response){
+                if (response['telat'] == true) {
+                    var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                } else {
+                    var tampil = "Sisa hari untuk meminjam buku : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
                 }
+                alert(tampil);
+            }).fail(function(response){
+                console.log(response);
             });
+            //     success: function(response) {
+            //         if (response['telat'] == true) {
+            //             var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+            //         } else {
+            //             var tampil = "Sisa hari untuk meminjam buku : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+            //         }
+            //         alert(tampil);
+            //     },
+            //     error: function(response) {
+            //         console.log(response);
+            //     }
+            // });
         });
     </script>
 
