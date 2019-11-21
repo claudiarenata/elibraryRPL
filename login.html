@@ -70,20 +70,38 @@
     <script>
         // // fungsi login mahasiswa
         $('#loginm').click(function(){
-            alert("yey");
             var usernamemhs = document.getElementById('nim').value;
             var pswmhs = document.getElementById('pswm').value;
             
             url = 'http://localhost:3000/login/user';
             
-            var posting = $.post(url, {nim :usernamemhs, password :pswmhs});
+            // var posting = $.post(url, {nim :usernamemhs, password :pswmhs});
 
             /* Alerts the results */
-            posting.done(function( data ) {
-                $.cookie('nim', usernamemhs);
-                window.location.href = 'firstpage.html';
+            // posting.done(function( data ) {
+            //     $.cookie('nim', usernamemhs);
+            //     window.location.href = 'firstpage.html';
+            // });
+
+            $.ajax({
+                url: url,
+                type:'POST',
+                dataType: 'json',
+                data: {
+                    nim :usernamemhs,
+                    password :pswmhs
+                },
+                success: function(response) {
+                    $.cookie('nim', usernamemhs);
+                    // window.location.href = 'firstpage.html';
+                },
+                error: function(response) {
+                    console.log(response);
+                    alert('SALAH');
+                }
             });
         });
+
 
     </script>
 
