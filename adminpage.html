@@ -109,6 +109,9 @@
     <tbody id="tabbodypeminjaman"></tbody>
     </table> 
 </div>
+<form id="formstatus" method="POST" action="#" style="display:none">
+    <input type="hidden" id="simpanan">
+</form>
 
 <div id="Update Buku Jurnal" class="tabcontent">
     <div class="wrap">
@@ -313,15 +316,15 @@ $(document).ready(function() {
     });        
 });
 
-$(document).ready(function(){
     $("#sModal").click(function(){
+        var idminjem = document.getElementById('simpanan').value;
         $.ajax({
             type : 'PUT', 
-            url :"http://localhost:3000/peminjaman?IDPeminjaman=1", 
+            url :"http://localhost:3000?IDPeminjaman="+idminjem, 
             dataType : 'json', 
             contentType: 'application/json',
             success : function(response) {
-                alert("success!");
+                alert('success');
             }, 
             error : function(response) {
                 console.log(response); 
@@ -329,7 +332,6 @@ $(document).ready(function(){
 
         });
     });
-}); 
 </script>
 
 </body>

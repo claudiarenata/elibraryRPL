@@ -114,6 +114,6 @@ function showstatus() {
 }
 
 // simpan jquery
-function simpan(c) {
-    document.getElementById("simpanan").innerHTML = x;
+function simpan(x) {
+    document.getElementById('simpanan').innerHTML = x;
 }

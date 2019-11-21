@@ -4,6 +4,7 @@ const app = express()
 const bodyparser = require('body-parser')
 const func = require('./function')
 const cors = require('cors')
+const moment = require('moment')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -13,7 +14,7 @@ let mysql = require('mysql');
 let connection = mysql.createConnection({	
   host     : 'localhost',	
   user     : 'root',	
-  password : 'adiera',	
+  password : '',	
   database : 'perpus_online'	
 });	
 	
@@ -186,6 +187,7 @@ app.put('/jurnal',function(req,res){
 //PUT data peminjaman
 app.put('/peminjaman',function(req,res){
 	try{
+		console.log("masuk kesini")
 		let IDPeminjaman = req.query.IDPeminjaman
 		
 		let query = 'SELECT * From peminjaman WHERE IDPeminjaman=?'
