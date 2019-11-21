@@ -325,7 +325,7 @@ app.post('/login/admin',function(req,res){
 			    if (error) throw error;
 			    //console.log(results);
 			    let data = results
-			    if (data == {}){
+			    if (func.isEmpty(data)){
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
@@ -346,7 +346,7 @@ app.post('/login/user',function(req,res){
 		let username = data.nim
 		let password = data.password
 		
-		if ((data==null)||(username==null)){
+		if ((password==null)||(username==null)){
 		
 		} else{
 			var query = 'SELECT * FROM data_user WHERE Tipe_Akun="Mahasiswa" AND NIM = ? AND Password=?'
@@ -354,7 +354,7 @@ app.post('/login/user',function(req,res){
 			    if (error) throw error;
 			    //console.log(results);
 			    let data = results
-			    if (data == {}){
+			    if (func.isEmpty(data)){
 					res.json({"response-code":401,"message":"Unauthorized"});
 				} else {
 					res.json({"response-code":200,"message":"Authorized"});
