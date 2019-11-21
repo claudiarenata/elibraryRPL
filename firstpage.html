@@ -94,7 +94,7 @@
                         
                         <label for="tanda">ISBN/ID Jurnal yang diinginkan :</label>
                         <input type="text" id="masukkan" disabled>
-                        <input type="hidden" id="tipepinjaman">
+                        <input type="hidden" id="tipepinjam">
                         
                         <label for="NIM">ID NIM :</label>
                         <input type="text" id="NIM" name="NIM" placeholder="Masukkan NIM..." required>
@@ -143,7 +143,7 @@
                                     "<td>"+value.Kategori+"</th>\n" +
                                     "<td>"+value.Stok_Buku+"</th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"',1)\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"','1')\"> Pinjam</button>" +
                                 "</tr>";
                             });
                         } else {
@@ -157,7 +157,7 @@
                                     "<td>"+value.Kategori_Jurnal+"</th>\n" +
                                     "<td>"+value.Stok_Jurnal+"<th>\n" +
                                     "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"',2)\"> Pinjam</button>" +
+                                    "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"','2')\"> Pinjam</button>" +
                                 "<tr>";
                             });
                         }
@@ -205,16 +205,19 @@
             url = 'http://localhost:3000/peminjaman';
 
             /* Send the data using post with element id name and name2*/
-            var elemen = document.getElementById('tipepinjaman').value;
-            if (elemen == '') {
-                var posting = $.post(url, {ISBN :$(elemen), NIM :$('#NIM').val});
+            var elemen = document.getElementById('tipepinjam').value;
+            var inputan = document.getElementById('masukkan').value;
+            var nimorang = document.getElementById('NIM').value;
+            if (parseInt(elemen) == 1) {
+                var posting = $.post(url, {ISBN :inputan, NIM :nimorang});
             } else {
-                var posting = $.post(url, {ID_Jurnal :$(elemen), NIM :$('#NIM').val});
+                var posting = $.post(url, {IDJurnal :inputan, NIM :nimorang});
             }
 
             /* Alerts the results */
             posting.done(function( data ) {
                 document.getElementById('result').innerHTML = data['message'];
+                document.getElementById('result').style.display = 'block';
             });
         });
     </script>
