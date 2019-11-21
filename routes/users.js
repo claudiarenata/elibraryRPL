@@ -156,8 +156,8 @@ app.post('/peminjaman',function(req,res){
 					// console.log(body)
 					let bod = JSON.parse(body)
 					let stock = bod[0].Stok_Buku
-					if (checkstock(stock)){ //checkstock=true
-						checkactive(NIM,function(err,ret){
+					if (func.checkstock(stock)){ //checkstock=true
+						func.checkactive(NIM,function(err,ret){
 							if (err) {
 								console.log(err)
 							} else { //not checkactive error
@@ -175,9 +175,7 @@ app.post('/peminjaman',function(req,res){
 										request({
 											method: "PUT",
 											url: url,
-											body:{
-												Stok_Buku: stok
-											},
+											body:{Stok_Buku: stok},
 											json:true
 										},function(err,result,body){
 											if (err) {
@@ -206,8 +204,8 @@ app.post('/peminjaman',function(req,res){
 					// console.log(body)
 					let bod = JSON.parse(body)
 					let stock = bod[0].Stok_Jurnal
-					if (checkstock(stock)){ //checkstock=true
-						checkactive(NIM,function(err,ret){
+					if (func.checkstock(stock)){ //checkstock=true
+						func.checkactive(NIM,function(err,ret){
 							if (err) {
 								console.log(err)
 							} else { //not checkactive error
@@ -258,42 +256,12 @@ app.post('/peminjaman',function(req,res){
 	}
 });
 
-// //PUT data peminjaman
-// app.put('/peminjaman',function(req,res){
-// 	try{
-// 		var IDPeminjaman = req.query.IDPeminjaman
-// 		var Status_Pengembalian = req.query.Status_Pengembalian
-// 		var Denda = req.query.Denda
-		
-// 		if (Denda==null){
-// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
-// 			var data = [Status_Pengembalian,IDPeminjaman]
-// 			connection.query(query, data, function (error, results, fields) {
-// 			    if (error) throw error;
-// 			    //console.log(results);
-// 			    res.json({"response-code":200,"message":"Record successfully updated"});
-//             })
-//         } else {
-// 			var query = 'UPDATE peminjaman SET Status_Pengembalian=?, Denda=? WHERE IDPeminjaman=?'
-// 			var data = [Status_Pengembalian, Denda, IDPeminjaman]
-// 			connection.query(query, data, function (error, results, fields) {
-// 			    if (error) throw error;
-// 			    //console.log(results);
-// 			    res.json({"response-code":200,"message":"Record successfully updated"});
-//             })
-// 		}
-// 	} catch(err){
-// 		console.log(err)
-// 		res.json({"response-code":500,"message":"Internal server error"})
-// 	}
-// });
-
 //notifikasi
 app.get('/notifikasi',function(req,res){
 	try{
 		var NIM = req.query.nim
 		
-		checkactive(NIM,function(err,ret){
+		func.checkactive(NIM,function(err,ret){
 			if (err) {
 				console.log(err)
 				throw error;
@@ -305,8 +273,8 @@ app.get('/notifikasi',function(req,res){
 							if (error) throw error;
 							let currentdate = moment(new Date())
 							let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
-							if (checktanggal(currentdate,Tanggal_Pengembalian)){
-								let day = difftanggal(currentdate,Tanggal_Pengembalian);
+							if (func.checktanggal(currentdate,Tanggal_Pengembalian)){
+								let day = func.difftanggal(currentdate,Tanggal_Pengembalian);
 								let denda = 1000*day;
 								res.json({
 									"statuspinjam":1,
@@ -316,7 +284,7 @@ app.get('/notifikasi',function(req,res){
 									"message":"terlambat mengembalikan"
 								})
 							} else {
-								let day = difftanggal(Tanggal_Pengembalian,currentdate);
+								let day = func.difftanggal(Tanggal_Pengembalian,currentdate);
 								res.json({
 									"statuspinjam":1,
 									"day":day,
@@ -375,13 +343,13 @@ app.post('/login/user',function(req,res){
 	try{
 		var data = req.body
 		//data username dan password
-		let username = data.username
+		let username = data.nim
 		let password = data.password
 		
 		if ((data==null)||(username==null)){
 		
 		} else{
-			var query = 'SELECT * FROM data_user WHERE Tipe_Akun="Mahasiswa" AND Username = ? AND Password=?'
+			var query = 'SELECT * FROM data_user WHERE Tipe_Akun="Mahasiswa" AND NIM = ? AND Password=?'
 			connection.query(query, [username,password], function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
@@ -398,79 +366,5 @@ app.post('/login/user',function(req,res){
 		res.json({"response-code":500,"message":"Internal server error"})
 	}
 });
-
-//Login 
-//BLOM JALAN
-app.get('/login',function(req,res){
-	try{
-		var tipe = req.query.tipe
-		
-		if (tipe = 'admin'){
-			req.get({url: 'http://localhost:3000/login/admin', headers: req.headers});
-
-			processRequest(req);
-			res.setHeader('Content-Type', 'application/json');
-			res.send('Req OK');
-		} if (tipe = 'user'){
-			req.get({url: 'http://localhost:3000/login/user', headers: req.headers});
-
-			processRequest(req);
-			res.setHeader('Content-Type', 'application/json');
-			res.send('Req OK');
-		}
-	} catch(err){
-		console.log(err)
-		res.json({"response-code":500,"message":"Internal server error"})
-	}
-});
-
-//isEmpty
-let isEmpty = (val) => {
-    let typeOfVal = typeof val;
-    switch(typeOfVal){
-        case 'object':
-            return (val.length == 0) || !Object.keys(val).length;
-            break;
-        case 'string':
-            let str = val.trim();
-            return str == '' || str == undefined;
-            break;
-        case 'number':
-            return val == '';
-            break;
-        default:
-            return val == '' || val == undefined;
-    }
-};
-
-//pengecekan jumlah stok
-function checkstock(stock){
-    return (stock>0);
-}
-
-//mengecek apakah user sedang melakukan peminjaman
-function checkactive(nim,callback){
-    try{
-		let query = 'SELECT * From peminjaman WHERE NIM = ? and Status_pengembalian = "0"'
-		connection.query(query,nim, function (error, results, fields) {
-			if (error) throw error;
-            //console.log(results);
-            let ret = !(isEmpty(results))
-            callback(error,ret)
-		})
-	} catch(err) {
-		console.log(err)
-    }
-}
-
-//cek tanggal dengan tipe moment
-function checktanggal(currentdate,Tanggal_Pengembalian){
-    return (currentdate).isAfter(Tanggal_Pengembalian);
-}
-
-//perbedaan tanggal dengan tipe moment
-function difftanggal(tanggalA,tanggalB){
-    return (tanggalA.diff(tanggalB,'days'))
-}
 
 module.exports = app;

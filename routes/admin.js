@@ -5,6 +5,7 @@ const bodyparser = require('body-parser')
 const func = require('./function')
 const cors = require('cors')
 const moment = require('moment')
+const request = require('request')
 
 app.use(bodyparser.json());	
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -196,7 +197,16 @@ app.put('/peminjaman',function(req,res){
 			let currentdate = moment(new Date())
 			let Tanggal_Pengembalian = moment(results[0].Tanggal_Pengembalian)
 			let Status_Pengembalian = results[0].Status_Pengembalian
-
+			
+			var ISBN = results[0].ISBN
+			var IDJurnal = results[0].IDJurnal
+			
+			if ((ISBN!=null)&&(IDJurnal==null)){
+				var tipe = 'buku'
+			} else if ((ISBN==null)&&(IDJurnal!=null)){
+				var tipe = 'jurnal'
+			}
+			
 			if (Status_Pengembalian==0){
 				if (func.checktanggal(currentdate,Tanggal_Pengembalian)){
 					let day = func.difftanggal(currentdate,Tanggal_Pengembalian);
@@ -207,7 +217,23 @@ app.put('/peminjaman',function(req,res){
 					connection.query(query, data, function (error, results, fields) {
 						if (error) throw error;
 						//console.log(results);
-						res.json({"response-code":200,"message":"Record successfully updated"});
+						if (tipe == 'buku'){
+							tambahStok(tipe,ISBN,function(err,ret){
+								if (err){
+									console.log(err)
+								} else {
+									res.json(ret)
+								}
+							})
+						} else if (tipe == 'jurnal'){
+							tambahStok(tipe,IDJurnal,function(err,ret){
+								if (err){
+									console.log(err)
+								} else {
+									res.json(ret)
+								}
+							})
+						}
 					})
 				} else {
 					var query = 'UPDATE peminjaman SET Status_Pengembalian=? WHERE IDPeminjaman=?'
@@ -216,8 +242,24 @@ app.put('/peminjaman',function(req,res){
 					connection.query(query, data, function (error, results, fields) {
 			    		if (error) throw error;
 			    		//console.log(results);
-			    		res.json({"response-code":200,"message":"Record successfully updated"});
-            		})
+			    		if (tipe == 'buku'){
+							tambahStok(tipe,ISBN,function(err,ret){
+								if (err){
+									console.log(err)
+								} else {
+									res.json(ret)
+								}
+							})
+						} else if (tipe == 'jurnal'){
+							tambahStok(tipe,IDJurnal,function(err,ret){
+								if (err){
+									console.log(err)
+								} else {
+									res.json(ret)
+								}
+							})
+						}
+					})
 				} 
 			} else {
 				res.json({"response-code":200,"message":"Book/Journal already returned"})
@@ -230,38 +272,65 @@ app.put('/peminjaman',function(req,res){
 	}
 });
 
-// //POST data Peminjaman
-// app.post('/peminjaman',function(req,res){
-// 	try{
-// 		var data = req.body
-// 		//data ISBN/IDJurnal
-// 		var JudulBuku = req.body.ISBN
-// 		var JudulJurnal = req.body.IDJurnal
-		
-// 		//Peminjaman Buku
-// 		if ((JudulBuku!=null)&&(JudulJurnal==null)){
-// 			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, ISBN, NIM) VALUES (?,?,?,?,?)'
-// 			var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,JudulBuku,data.NIM]
-//             connection.query('SET FOREIGN_KEY_CHECKS=0')
-//             connection.query(query, instance, function(error, results, fields){
-// 				if (error) throw error;
-// 				//console.log(results);
-// 				res.json({"response-code":200,"message":"Record successfully added"})
-// 			})
-// 		} else if ((JudulBuku==null)&&(JudulJurnal!=null)){
-// 			var query = 'INSERT INTO peminjaman (IDPeminjaman, Tanggal_Peminjaman, Tanggal_Pengembalian, IDJurnal, NIM) VALUES (?,?,?,(SELECT IDJurnal FROM jurnal WHERE Judul_Jurnal = ?),?)'
-//             var instance = [data.IDPeminjaman,data.Tanggal_Peminjaman,data.Tanggal_Pengembalian,[JudulJurnal],data.NIM]
-//             connection.query('SET FOREIGN_KEY_CHECKS=0')
-// 			connection.query(query, instance, function(error, results, fields){
-// 				if (error) throw error;
-// 				//console.log(results);
-// 				res.json({"response-code":200,"message":"Record successfully added"})
-// 			})
-// 		}
-// 	} catch(err){
-// 		console.log(err)
-// 		res.json({"response-code":500,"message":"Internal server error"})
-// 	}
-// });
-
+function tambahStok(tipe, id, callback){
+	if (tipe == 'buku'){
+		request('http://localhost:3000/book/'+id,function(error,response,body){
+			if (!error && response.statusCode == 200){
+				// console.log(body)
+				let bod = JSON.parse(body)
+				let stock = bod[0].Stok_Buku
+				stock++;
+				
+				let url = 'http://localhost:3000/book?ISBN='+id
+				request({
+					method: "PUT",
+					url: url,
+					body:{Stok_Buku: stock},
+					json:true
+				},function(err,result,body){
+					if (err) {
+						onsole.log(err)
+					} else {
+						let ret = ({"response-code":200,"message":"Record successfully added"})
+						callback(error,ret)
+					}
+				})
+			} else {
+				let ret = error
+				callback(error,ret)
+			}
+		})
+	} else if (tipe == 'jurnal'){
+		request('http://localhost:3000/jurnal/'+id,function(error,response,body){
+			if (!error && response.statusCode == 200){
+				// console.log(body)
+				let bod = JSON.parse(body)
+				let stock = bod[0].Stok_Jurnal
+				stock++;
+				
+				let url = 'http://localhost:3000/jurnal?IDJurnal='+id
+				request({
+					method: "PUT",
+					url: url,
+					body:{Stok_Jurnal: stock},
+					json:true
+				},function(err,result,body){
+					if (err) {
+						console.log(err)
+					} else {
+						let ret = ({"response-code":200,"message":"Record successfully added"})
+						callback(error,ret)
+					}
+				})
+			} else {
+				let ret = error
+				callback(error,ret)
+			}
+		})
+	} else {
+		let ret = ({"response-code":500,"message":"Internal Server Error"})
+		callback(error,ret)
+	}
+}
+				
 module.exports = app;
