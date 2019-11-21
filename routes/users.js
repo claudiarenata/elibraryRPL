@@ -354,7 +354,7 @@ app.post('/login/user',function(req,res){
 			connection.query(query, [username,password], function (error, results, fields) {
 			    if (error) throw error;
 			    //console.log(results);
-			    let data = results
+				let data = results;
 			    if (func.isEmpty(data)){
 					res.code(401);
 					res.json({"response-code":401,"message":"Unauthorized"});

@@ -118,6 +118,8 @@
     <a type="hidden" id="simpanan"></a>
 </form>
 
+<a type="hidden" id="nimnotif"></a>
+
 <div id="Update Buku Jurnal" class="tabcontent">
     <div class="wrap">
         <div id="pilihan">
@@ -260,36 +262,6 @@
             location.reload();
         });
     });
-
-
-
-// $("#formbuku").click(function(event){
-//     event.preventDefault(); //prevent default action 
-//     $.ajax({
-//         url : "http://localhost:3000/book",
-//         type: "POST",
-// 		dataType :'json'
-//     }).done(function(response){ //
-//         $("#server-results").html(response);
-//     });
-// });
-
-// $("#submit_btn1").click(function(event){
-//     event.preventDefault(); //prevent default action 
-//     var post_url = $(this).attr("action"); //get form action url
-//     var request_method = $(this).attr("method"); //get form GET/POST method
-// 	var form_data = $(this).serialize(); //Creates new FormData object
-//     $.ajax({
-//         url : post_url,
-//         type: request_method,
-//         data : form_data,
-// 		contentType: false,
-// 		cache: false,
-// 		processData:false
-//     }).done(function(response){ //
-//         $("#server-results").html(response);
-//     });
-// });
 
 $(document).ready(function() {
     $("#daftarPeminjaman").click(function() {

@@ -18,6 +18,15 @@ app.get('/adminpage.css', function (req,res){
     res.sendFile(path.join(__dirname+'/adminpage.css'))
 }); 
 
+app.get('/firstpage.css', function (req,res){
+    res.sendFile(path.join(__dirname+'/firstpage.css'))
+}); 
+
+app.get('/login.css', function (req,res){
+    res.sendFile(path.join(__dirname+'/login.css'))
+}); 
+
+
 app.get('/logo-itb-512px.png', function (req,res){
     res.sendFile(path.join(__dirname+'/logo-itb-512px.png'))
 }); 
@@ -26,7 +35,35 @@ app.get('/adminpage.js', function (req,res){
     res.sendFile(path.join(__dirname+'/adminpage.js'))
 }); 
 
+app.get('/firstpage.js', function (req,res){
+    res.sendFile(path.join(__dirname+'/firstpage.js'))
+}); 
+
+app.get('/login.js', function (req,res){
+    res.sendFile(path.join(__dirname+'/login.js'))
+}); 
+
 app.use('/',router)
+
+// here you set that all templates are located in `/views` directory
+app.set('views', __dirname + '/views');
+
+// here you set that you're using `ejs` template engine, and the
+// default extension is `ejs`
+app.set('view engine', 'ejs');
+
+
+app.get('/adminpage', function(req,res){
+    res.sendFile(path.join(__dirname+'/adminpage.html'))
+})
+
+app.get('/userpage', function(req,res){
+    res.sendFile(path.join(__dirname+'/firstpage.html'))
+})
+
+app.get('/home', function(req,res){
+    res.sendFile(path.join(__dirname+'/login.html'))
+})
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
