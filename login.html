@@ -25,12 +25,12 @@
     <form id="loginmhs" action="firstpage.html" method="post" style="display:none">
         <div class="container">
             <label for="nim"><b>NIM</b></label>
-            <input type="text" placeholder="Enter NIM" name="nim" required>
+            <input type="text" placeholder="Enter NIM" name="nim" id="nim" required>
         
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <input type="password" placeholder="Enter Password" name="pswm" id="pswm" required>
             
-            <button type="submit">Login </button>
+            <button id="loginm" >Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -48,12 +48,12 @@
     
         <div class="container">
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
+            <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
         
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <input type="password" placeholder="Enter Password" name="pswa" id="pswa" required>
             
-            <button type="submit">Login </button>
+            <button id="logina">Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -65,6 +65,34 @@
             <label class="psw">Forgot <a href="#">password?</a></label>
         </div>
     </form>
+
+    <script>
+        $(document).ready(function(){
+            $("#loginm").click(function(e) {
+                /* stop form from submitting normally */
+                e.preventDefault();
+
+                endpoint = 'http://localhost:3000/login/user';
+
+                $.ajax({
+                    url: endpoint,
+                    type:'GET',
+                    dataType: 'json',
+                    data: {
+                        username: document.getElementById('NIM').value;
+                    },
+                    success: function(response) {
+                        
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+        
+    </script>
+
 </body>
 
 </html>
