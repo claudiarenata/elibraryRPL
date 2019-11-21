@@ -107,10 +107,11 @@
         </tr>
     </thead>
     <tbody id="tabbodypeminjaman"></tbody>
-    </table> 
+    </table>
 </div>
+
 <form id="formstatus" method="POST" action="#" style="display:none">
-    <input type="hidden" id="simpanan">
+    <a type="hidden" id="simpanan"></a>
 </form>
 
 <a type="hidden" id="nimnotif"></a>
@@ -276,7 +277,7 @@ $(document).ready(function() {
                                     "<td>" + value.Denda +"</th>\n"+
                                     "<td>" + value.ISBN+ "</th>\n" + 
                                     "<td>" + value.IDJurnal +"</th>\n" +
-                                    "<td><button id=\"sModal\" onclick=\"simpan('"+value.IDPeminjaman+"')\">Ubah Status</button>" +
+                                    "<td><button id='sbtn' onclick=\"changeStatus('"+value.IDPeminjaman+"')\">Ubah Status</button>" +
                                 "</tr>";
                         });
                         tabmodiv.innerHTML = content;
@@ -288,22 +289,23 @@ $(document).ready(function() {
     });        
 });
 
-    $("#sModal").click(function(){
-        var idminjem = document.getElementById('simpanan').value;
+   function changeStatus(IDPeminjaman){
+        simpan(IDPeminjaman); 
+        var idminjem = document.getElementById('simpanan').innerHTML;
         $.ajax({
             type : 'PUT', 
-            url :"http://localhost:3000?IDPeminjaman="+idminjem, 
+            url :"http://localhost:3000/peminjaman?IDPeminjaman="+idminjem, 
             dataType : 'json', 
             contentType: 'application/json',
             success : function(response) {
-                alert('success');
+                alert(response['message']);
+                location.reload();
             }, 
             error : function(response) {
                 console.log(response); 
             }
-
         });
-    });
+    };
 </script>
 
 </body>
