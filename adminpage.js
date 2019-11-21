@@ -7,7 +7,7 @@ function showtabel() {
 }
 
 // detail buku
-function showdetail() {
+function showdetail(x) {
     // Get the modal
     var modal = document.getElementById("detailModal");
 
@@ -19,7 +19,7 @@ function showdetail() {
 
     // When the user clicks the button, open the modal 
     modal.style.display = "block";
-
+    document.getElementById('iiiooo').innerHTML = x;
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
