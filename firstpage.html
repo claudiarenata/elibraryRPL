@@ -5,6 +5,7 @@
 <script src="firstpage.js" ></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="jquery.cookie.js"></script>
 
 <head>
     <title>E-library ITB</title>
@@ -106,6 +107,8 @@
     </div>
     </div>
 
+    <a type="hidden" id="nimnotif"></a>
+
     <!-- JQUERY AJAX -->
     <script>
         $(document).ready(function(){
@@ -199,45 +202,15 @@
             /* stop form from submitting normally */
             e.preventDefault();
 
-            endpoint = 'http://localhost:3000/notifikasi';
-            
+            endpoint = 'http://localhost:3000/notifikasi?NIM=',
+
             $.ajax({
-                url: endpoint+'?NIM='+encodeURIComponent(document.getElementById('NIM').value),
+                url: endpoint+'?NIM='+encodeURIComponent($.cookie('nim')),
                 type:'GET',
                 dataType: 'json',
                 success: function(response) {
-                    content="";
-                    if (pilihan == 'book') {
-                        $.each(response, function(key, value){
-                        content+=
-                            "<tr>" +
-                                "<td>"+value.ISBN+"</th>\n" +
-                                "<td>"+value.Judul_Buku+"</th>\n" +
-                                "<td>"+value.Pengarang+"</th>\n" +
-                                "<td>"+value.Penerbit+"</th>\n" +
-                                "<td>"+value.Tahun_Terbit+"</th>\n" +
-                                "<td>"+value.Kategori+"</th>\n" +
-                                "<td>"+value.Stok_Buku+"</th>\n" +
-                                "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                "<td><button id=\"pModal\" onclick=\"showborrow('"+value.ISBN+"','1')\"> Pinjam</button>" +
-                            "</tr>";
-                        });
-                    } else {
-                        $.each(response, function(key, value){
-                        content+=
-                            "<tr>" +
-                                "<td>"+value.IDJurnal+"</th>\n" +
-                                "<td>"+value.Judul_Jurnal+"</th>\n" +
-                                "<td>"+value.Pengarang_Jurnal+"</th>\n" +
-                                "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
-                                "<td>"+value.Kategori_Jurnal+"</th>\n" +
-                                "<td>"+value.Stok_Jurnal+"<th>\n" +
-                                "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
-                                "<td><button id=\"pModal\" onclick=\"showborrow('"+value.IDJurnal+"','2')\"> Pinjam</button>" +
-                            "<tr>";
-                        });
-                    }
-                    tabmodiv.innerHTML = content;
+                    var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
+                    alert(tampil);
                 },
                 error: function(response) {
                     console.log(response);

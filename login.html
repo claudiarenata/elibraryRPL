@@ -3,6 +3,8 @@
 
 <link rel="stylesheet" href="login.css">
 <script src="login.js" ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="jquery.cookie.js" defer></script>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,31 +24,29 @@
     
 
     <!-- login mahasiswa -->
-    <form id="loginmhs" action="firstpage.html" method="post" style="display:none">
-        <div class="container">
+    <form id="loginmhs" method="" id="loginmhs" style="display:none; background-color:#f1f1f1;">
+        <div class="container" >
             <label for="nim"><b>NIM</b></label>
             <input type="text" placeholder="Enter NIM" name="nim" id="nim" required>
-        
+
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="pswm" id="pswm" required>
             
-            <button id="loginm" >Login </button>
+            <button id="loginm" type="button">Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
             </label>
-        </div>
-    
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn" onclick="hideloginmhs();enableadm(); enablemhs()">Cancel</button>
-            <label class="psw">Forgot <a href="#">password?</a></label>
+            <div class="container">
+                <button type="button" class="cancelbtn" onclick="hideloginmhs();enableadm(); enablemhs()">Cancel</button>
+                <label class="psw">Forgot <a href="#">password?</a></label>
+            </div>
         </div>
     </form>
 
     <!-- login admin -->
-    <form id="loginadm" action="admin.html" method="post" style="display:none">
-    
-        <div class="container">
+    <form id="loginadm" action="firstpage.html" method="" id="loginadm" style="display:none; background-color:#b1b1b1;">
+        <div class="container" >
             <label for="uname"><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
         
@@ -58,39 +58,33 @@
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
             </label>
-        </div>
-    
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn" onclick="hideloginadm(); enableadm(); enablemhs();">Cancel</button>
-            <label class="psw">Forgot <a href="#">password?</a></label>
+            <div class="container">
+                <button type="button" class="cancelbtn" onclick="hideloginadm(); enableadm(); enablemhs();">Cancel</button>
+                <label class="psw">Forgot <a href="#">password?</a></label>
+            </div>
         </div>
     </form>
 
+    <!-- <a id="nimsimpan" type="hidden"></a> -->
+
     <script>
-        $(document).ready(function(){
-            $("#loginm").click(function(e) {
-                /* stop form from submitting normally */
-                e.preventDefault();
+        // // fungsi login mahasiswa
+        $('#loginm').click(function(){
+            alert("yey");
+            var usernamemhs = document.getElementById('nim').value;
+            var pswmhs = document.getElementById('pswm').value;
+            
+            url = 'http://localhost:3000/login/user';
+            
+            var posting = $.post(url, {nim :usernamemhs, password :pswmhs});
 
-                endpoint = 'http://localhost:3000/login/user';
-
-                $.ajax({
-                    url: endpoint,
-                    type:'GET',
-                    dataType: 'json',
-                    data: {
-                        username: document.getElementById('NIM').value;
-                    },
-                    success: function(response) {
-                        
-                    },
-                    error: function(response) {
-                        console.log(response);
-                    }
-                });
+            /* Alerts the results */
+            posting.done(function( data ) {
+                $.cookie('nim', usernamemhs);
+                window.location.href = 'firstpage.html';
             });
         });
-        
+
     </script>
 
 </body>
