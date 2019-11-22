@@ -5,7 +5,7 @@ body {
 /* header & judul UPT Perpustakaan ITB */
 .judul {
   position: absolute;
-  top: 20px;
+  top: 30px;
   left: 115px;
 }
 
@@ -53,6 +53,8 @@ body {
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 /* search bar */
@@ -72,6 +74,14 @@ table, th, td {
 }
 th, td {
     padding: 10px;
+}
+th {
+  position: sticky;
+  top: 0px;
+  background-color: lightgray;
+}
+td {
+  background-color: none;
 }
 
 .tabBuku {
@@ -157,20 +167,5 @@ input[type=text], select {
   padding: 15px 26px;
   position: relative;
   float: right;
-  /* background-color: white); */
   color: #333;
 }
-
-/* .notification:hover {
-  background: red;
-} */
-
-/* .notification .badge {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background-color: red;
-  color: white;
-} */

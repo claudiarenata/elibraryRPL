@@ -7,7 +7,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="jquery.cookie.js"></script>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>E-library ITB</title>
 </head>
 
@@ -18,58 +22,71 @@
         <p class="judul"> UPT Perpustakaan ITB </p>
     </h1>
 
+    <p padding: 10px></p>
     <div class="tab" style="display: inline-flexbox;">
         <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
         <button class="tablinks" onclick="openTable(event, 'Contact')">Contact</button>
         <button href="#" class="notification" id="notif" style="background-color: dodgerblue;">Notification</button>
+        <a href="http://localhost:3000/home"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
     </div>
 
-    <!-- <form action="" target="_self" method="get"> -->
+    <p padding: 10px></p>
+    <div id="Contact" class="tabcontent" style="margin-left: 10px; margin-right: 10px;">
+        <fieldset id="corners">
+            <p padding: 10px></p>
+            <p style="margin-left: 10px;">Apabila terdapat kesulitan dalam penggunaan website, harap menghubungi :<br>
+                - Zalikha Adiera Gambetta (18217027)<br>
+                - Christopher Calvin (18217039)<br>
+                - Muhammad Yanza Hattari (18217043)<br>
+                - Claudia Renata Maharani D. (18217048)
+            </p>
+        </fieldset>
+    </div>
+
     <p padding: 10px></p>
     <div id="Search" class="tabcontent">
-        <fieldset id="corners">
-            <legend>Search</legend>
-            <div class="topnav">
+        <fieldset id="corners" style="width: min-content; margin: auto;">
+            <div class="topnav" style="margin-left: 10px; margin-right: 10px;">
+                <p padding: 10px></p>
+                <h1 style="font-size: 20px;">Pencarian Buku atau Jurnal</h1>
                 <form method="GET" action="#">
-                    <p padding: 20px></p>
-                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
-                    <p padding: 20px></p>
-                    <!-- Pengarang : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Pengarang..." name="author" id="author" style="float: left"><br>
-                    <p padding: 10px></p> -->
+                    <b>Keyword : </b><br><input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left; width: 500px;"><br>
+                    <p padding: 30px></p><br>
+                    <p><b>Kategori :</b></p>
                     <select style="width: 100px;" id="bookjurnal">
                         <option value="book">Book</option>
                         <option value="jurnal">Jurnal</option>
                     </select><br>
-                    <button id="cariData" onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
+                    <p padding: 20px></p>
+                    <button id="cariData" onclick="showtabel()" style="width: 80px; height: 30px;">Search</button>
                 </form>
             </div><br>
         </fieldset>
-        <!-- </form> -->
         
         <!-- tabel hasil pencarian -->
         <table class="tabBuku" id="tabelBuku" style="display: none">
             <thead id="tabheadbuku">
                 <tr>
-                    <th>ISBN</th>
-                    <th>Judul</th>
-                    <th>Pengarang</th>
-                    <th>Penerbit</th>
-                    <th>Tahun Terbit</th>
-                    <th>Kategori</th>
-                    <th>Stok</th>
+                    <th style="text-align: center;">ISBN</th>
+                    <th style="text-align: center;">Judul</th>
+                    <th style="text-align: center;">Pengarang</th>
+                    <th style="text-align: center;">Penerbit</th>
+                    <th style="text-align: center;">Tahun Terbit</th>
+                    <th style="text-align: center;">Kategori</th>
+                    <th style="text-align: center;">Stok</th>
                 <tr>
             </thead>
             <tbody id="tabbodybuku"></tbody>
         </table>
-        <table class="tabBuku" id="tabelJurnal" style="display: none">
+        <table class="tabBuku" id="tabelJurnal" style="display: none;">
         <thead id="tabheadjurnal">
             <tr>
-                <th>ID Jurnal</th>
-                <th>Judul</th>
-                <th>Pengarang</th>
-                <th>Tahun Terbit</th>
-                <th>Kategori</th>
-                <th>Stok</th>
+                <th style="text-align: center;">ID Jurnal</th>
+                <th style="text-align: center;">Judul</th>
+                <th style="text-align: center;">Pengarang</th>
+                <th style="text-align: center;">Tahun Terbit</th>
+                <th style="text-align: center;">Kategori</th>
+                <th style="text-align: center;">Stok</th>
             <tr>
         </thead>
         <tbody id="tabbodyjurnal"></tbody>
@@ -216,18 +233,6 @@
             }).fail(function(response){
                 console.log(response);
             });
-            //     success: function(response) {
-            //         if (response['telat'] == true) {
-            //             var tampil = "Jumlah hari keterlambatan : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
-            //         } else {
-            //             var tampil = "Sisa hari untuk meminjam buku : "+response['day']+"\nJumlah denda : "+response['denda']+"\nKeterangan : "+response['message'];
-            //         }
-            //         alert(tampil);
-            //     },
-            //     error: function(response) {
-            //         console.log(response);
-            //     }
-            // });
         });
     </script>
 

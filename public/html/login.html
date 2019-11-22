@@ -6,6 +6,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="jquery.cookie.js" defer></script>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>E-library ITB</title>
@@ -16,52 +20,50 @@
     <div class="wrap">
         <h2>Login UPT Perpustakaan ITB</h2>
 
-        <div id="pilihan">
-            <button id="mhs" onclick="showloginmhs(); disableadm();">Mahasiswa</button>
-            <button id="adm" onclick="showloginadm(); disablemhs();">Admin Perpustakaan</button>
+        <div id="pilihan" style="color: white;">
+            <button id="mhs" onclick="showloginmhs(); disableadm();" style="box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);"><b>Mahasiswa</b></button><br>
+            <p style="padding: 5px;"></p>
+            <button id="adm" onclick="showloginadm(); disablemhs();" style="box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);"><b>Admin Perpustakaan</b></button>
         </div>
     </div>
     
 
     <!-- login mahasiswa -->
+    <p style="padding: 10px;"></p>
     <form id="loginmhs" method="" id="loginmhs" style="display:none; background-color:#f1f1f1;">
         <div class="container" >
             <label for="nim"><b>NIM</b></label>
-            <input type="text" placeholder="Enter NIM" name="nim" id="nim" required>
+            <input type="text" placeholder="Enter NIM..." name="nim" id="nim" required>
 
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="pswm" id="pswm" required>
+            <input type="password" placeholder="Enter Password..." name="pswm" id="pswm" required>
             
             <button id="loginm" type="button">Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
-            <div class="container">
-                <button type="button" class="cancelbtn" onclick="hideloginmhs();enableadm(); enablemhs()">Cancel</button>
-                <label class="psw">Forgot <a href="#">password?</a></label>
-            </div>
+            </label><br>
+            <p style="padding: 5px;"></p>
+            <button type="button" class="cancelbtn" onclick="hideloginmhs();enableadm(); enablemhs()">Cancel</button>
         </div>
     </form>
 
     <!-- login admin -->
-    <form id="loginadm" method="" id="loginadm" style="display:none; background-color:#b1b1b1;">
+    <form id="loginadm" method="" id="loginadm" style="display:none; background-color:#f1f1f1;">
         <div class="container" >
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+            <input type="text" placeholder="Enter Username..." name="uname" id="uname" required>
         
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="pswa" id="pswa" required>
+            <input type="password" placeholder="Enter Password..." name="pswa" id="pswa" required>
             
             <button id="logina" type="button">Login </button>
             
             <label>
                 <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
-            <div class="container">
-                <button type="button" class="cancelbtn" onclick="hideloginadm(); enableadm(); enablemhs();">Cancel</button>
-                <label class="psw">Forgot <a href="#">password?</a></label>
-            </div>
+            </label><br>
+            <p style="padding: 5px;"></p>
+            <button type="button" class="cancelbtn" onclick="hideloginadm(); enableadm(); enablemhs();">Cancel</button>
         </div>
     </form>
 
@@ -86,16 +88,6 @@
                 console.log(response);
                 alert('Maaf, harap coba lagi');
             });
-                
-            //     success: function(response) {
-            //         $.cookie('nim', usernamemhs);
-            //         window.location.href = '/userpage';
-            //     },
-            //     error: function(response) {
-            //         console.log(response);
-            //         alert('Maaf, harap coba lagi'); 
-            //     }
-            // });
         });
         
         $('#logina').click(function(){
@@ -114,17 +106,8 @@
                 window.location.href = '/adminpage';
             }).fail(function(response){
                 console.log(response);
-                    alert('Maaf, harap coba lagi');
+                alert('Maaf, harap coba lagi');
             });
-            //     success: function(response) {
-            //         // $.cookie('nim', usernamemhs);
-            //         window.location.href = '/adminpage';
-            //     },
-            //     error: function(response) {
-            //         console.log(response);
-            //         alert('Maaf, harap coba lagi');
-            //     }
-            // });
         });
 
     </script>

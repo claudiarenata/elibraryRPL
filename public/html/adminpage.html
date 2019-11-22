@@ -19,7 +19,7 @@
 </h1>
 
 
-
+<p padding: 10px></p>
 <div class="tab" style="display: inline-flexbox;">
     <button class="tablinks" onclick="openTable(event, 'Search')">Search</button>
     <button class="tablinks" id="daftarPeminjaman" onclick="openTable(event, 'Daftar Peminjaman')">Daftar Peminjaman</button>
@@ -27,49 +27,50 @@
     <a href="http://localhost:3000/home"><button href="#notification" class="notification" style="background-color: dodgerblue;" >Log Out</button></a>
 </div>
        
-
+<p padding: 10px></p>
 <div id="Search" class="tabcontent">
-        <fieldset id="corners">
-            <legend>Search</legend>
-            <div class="topnav">
+        <fieldset id="corners" style="width: min-content; margin: auto;">
+            <div class="topnav" style="margin-left: 10px; margin-right: 10px;">
+                <p padding: 10px></p>
+                <h1 style="font-size: 20px;">Pencarian Buku atau Jurnal</h1>
                 <form method="GET" action="#">
-                    <p padding: 20px></p>
-                    Judul : <input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left;"><br>
-                    <p padding: 20px></p>
+                    <b>Keyword : </b><br><input class="topnav" type="text" placeholder="Mencari Berdasarkan Judul..." name="judul" id="judul" style="float: left; width: 500px;"><br>
+                    <p padding: 30px></p>
+                    <p><b>Kategori :</b></p>
                     <select style="width: 100px;" id="bookjurnal">
                         <option value="book">Book</option>
                         <option value="jurnal">Jurnal</option>
                     </select><br>
-                    <button id="cariData" onclick="showtabel()" style="width: 50px; height: 30px;">submit</button>
+                    <p padding: 20px></p>
+                    <button id="cariData" onclick="showtabel()" style="width: 80px; height: 30px;">Search</button>
                 </form>
             </div><br>
         </fieldset>
-        <!-- </form> -->
         
         <!-- tabel hasil pencarian -->
-        <table class="tabBuku" id="tabelBuku" style="display: none">
+        <table class="tabBuku" id="tabelBuku" style="display: none;">
             <thead id="tabheadbuku">
                 <tr>
-                    <th>ISBN</th>
-                    <th>Judul</th>
-                    <th>Pengarang</th>
-                    <th>Penerbit</th>
-                    <th>Tahun Terbit</th>
-                    <th>Kategori</th>
-                    <th>Stok</th>
+                    <th style="text-align: center;">ISBN</th>
+                    <th style="text-align: center;">Judul</th>
+                    <th style="text-align: center;">Pengarang</th>
+                    <th style="text-align: center;">Penerbit</th>
+                    <th style="text-align: center;">Tahun Terbit</th>
+                    <th style="text-align: center;">Kategori</th>
+                    <th style="text-align: center;">Stok</th>
                 <tr>
             </thead>
             <tbody id="tabbodybuku"></tbody>
         </table>
-        <table class="tabBuku" id="tabelJurnal" style="display: none">
+        <table class="tabBuku" id="tabelJurnal" style="display: none;">
         <thead id="tabheadjurnal">
             <tr>
-                <th>ID Jurnal</th>
-                <th>Judul</th>
-                <th>Pengarang</th>
-                <th>Tahun Terbit</th>
-                <th>Kategori</th>
-                <th>Stok</th>
+                <th style="text-align: center;">ID Jurnal</th>
+                <th style="text-align: center;">Judul</th>
+                <th style="text-align: center;">Pengarang</th>
+                <th style="text-align: center;">Tahun Terbit</th>
+                <th style="text-align: center;">Kategori</th>
+                <th style="text-align: center;">Stok</th>
             <tr>
         </thead>
         <tbody id="tabbodyjurnal"></tbody>
@@ -95,7 +96,7 @@
     style="border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    border: 1px solid #ddd;" style="display: none">
+    border: none" style="display: none">
     <thead id="tabheadpeminjaman">
         <tr>
             <th style=" text-align: left;padding: 16px;" name="IDPeminjaman">ID Peminjaman</th>
@@ -155,9 +156,9 @@
         
         <label for="Stok_Buku">Stok</label>
         <input type="number" id="Stok_Buku" name="Stok_Buku" placeholder="Stok">
-    
+        
         <input type="submit" id="submit_btn" value="Submit">
-        <div class="container" style="background-color:#f1f1f1">
+        <div>
             <button type="button" class="cancelbtn" onclick="hideformbuku();enablejurnal(); enablebuku()">Cancel</button>
         </div>
     </form>
@@ -196,8 +197,8 @@
         <input type="number" id="Stok_Jurnal" name="Stok_Jurnal" placeholder="Stok">
           
         <input type="submit" id="submit_btn1" value="Submit">
-        <div class="container" style="background-color:#f1f1f1">
-                <button type="button" class="cancelbtn" onclick="hideformjurnal(); enablejurnal(); enablebuku();">Cancel</button>
+        <div>
+            <button type="button" class="cancelbtn" onclick="hideformjurnal(); enablejurnal(); enablebuku();">Cancel</button>
         </div>
     </form>  
 </div>
@@ -285,7 +286,7 @@ $(document).ready(function() {
                                     "<td>" + value.Denda +"</th>\n"+
                                     "<td>" + value.ISBN+ "</th>\n" + 
                                     "<td>" + value.IDJurnal +"</th>\n" +
-                                    "<td><button id='sbtn' onclick=\"changeStatus('"+value.IDPeminjaman+"')\">Ubah Status</button>" +
+                                    "<td><button id='sbtn' onclick=\"changeStatus('"+value.IDPeminjaman+"')\">Ubah Status</button>" + "</th>\n" +
                                 "</tr>";
                         });
                         tabmodiv.innerHTML = content;
@@ -361,7 +362,7 @@ $(document).ready(function(){
                                     "<td>"+value.Tahun_Terbit_Jurnal+"</th>\n" +
                                     "<td>"+value.Kategori_Jurnal+"</th>\n" +
                                     "<td>"+value.Stok_Jurnal+"<th>\n" +
-                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Sinopsis+"')\"> Detail</button>" +
+                                    "<td><button id=\"dModal\" onclick=\"showdetail('"+value.Abstraksi+"')\"> Detail</button>" +
                                 "<tr>";
                             });
                         }
